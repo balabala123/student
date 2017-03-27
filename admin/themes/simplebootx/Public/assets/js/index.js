@@ -62,7 +62,7 @@ $(function () {
 
     ///
 
-    $(".apps_container li").live("click", function () {
+    $(".apps_container li").on("click", function () {
         var app = '<li><span class="delete" style="display:inline">×</span><img src="" class="icon"><a href="#" class="title"></a></li>';
         var $app = $(app);
         $app.attr("data-appname", $(this).attr("data-appname"));
@@ -83,23 +83,23 @@ $(function () {
         $(".window").hide();
     });
 
-    $(".task-item").live("click", function () {
+    $(".task-item").on("click", function () {
         var appid = $(this).attr("app-id");
         var $app = $('#' + appid);
         showTopWindow($app);
     });
 
-    $("#task-content-inner li").live("click", function () {
+    $("#task-content-inner li").on("click", function () {
     	openapp($(this).attr("app-url"), $(this).attr("app-id"), $(this).attr("app-name"));
     	return false;
     });
     
-    $("#task-content-inner li").live("dblclick", function () {
+    $("#task-content-inner li").on("dblclick", function () {
     	closeapp($(this));
     	return false;
     	
     });
-    $("#task-content-inner a.macro-component-tabclose").live("click", function () {
+    $("#task-content-inner a.macro-component-tabclose").on("click", function () {
     	closeapp($(this).parent());
         return false;
     });

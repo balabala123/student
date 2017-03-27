@@ -43,7 +43,10 @@
                     <td style="color:orange;font-weight: bold;font-size: 13px;">{$vo.status}</td>
                 </if>
                 <td>
-                    <if condition="$vo['status'] neq '已取消'">
+                    <if condition="$vo['status'] eq '申请中'">
+                        <a href="{:U('StuSc/remove_add',array('id'=>$vo['id']))}" class="rem_sc">取消申请</a>
+                    </if>
+                    <if condition="$vo['status'] eq '审批拒绝'">
                         <a href="{:U('StuSc/remove_add',array('id'=>$vo['id']))}" class="rem_sc">取消申请</a>
                     </if>
 

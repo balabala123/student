@@ -49,11 +49,11 @@
                 } else {// 上传成功 获取上传文件信息
 //                    $image = new \Think\Image();
                     foreach($info as $v) {
-                       /* $image->open("SMS/public/upload/".$v['savename']);
+                       /* $image->open("student/public/upload/".$v['savename']);
                         // 生成一个固定大小为150*150的缩略图并保存为thumb.jpg
                         $image->thumb(150, 150,\Think\Image::IMAGE_THUMB_FIXED);*/
 
-                        $this->model->add(array('image_src'=>'/sms/public/upload/'.$v['savename']));
+                        $this->model->add(array('image_src'=>'/student/public/upload/'.$v['savename']));
                     }
                     $this->success('上传成功！');
                 }

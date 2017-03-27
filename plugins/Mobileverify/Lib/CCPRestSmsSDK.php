@@ -135,7 +135,7 @@ class YunTongXunREST {
         // 大写的sig参数 
         $sig =  strtoupper(md5($this->AccountSid . $this->AccountToken . $this->Batch));
         // 生成请求URL        
-        $url="https://$this->ServerIP:$this->ServerPort/$this->SoftVersion/Accounts/$this->AccountSid/SMS/TemplateSMS?sig=$sig";
+        $url="https://$this->ServerIP:$this->ServerPort/$this->SoftVersion/Accounts/$this->AccountSid/student/TemplateSMS?sig=$sig";
         $this->showlog("request url = ".$url);
         // 生成授权：主帐户Id + 英文冒号 + 时间戳。
         $authen = base64_encode($this->AccountSid . ":" . $this->Batch);

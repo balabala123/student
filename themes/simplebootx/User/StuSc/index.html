@@ -24,11 +24,11 @@
         <div class="span9">
             <div class="tabs">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="{:U('StuSc/index')}" data-toggle="tab"><i class="fa fa-list-alt"></i>奖学金申请记录</a></li>
-                    <li><a href="{:U('StuSc/add')}" data-toggle="tab"><i class="fa fa-list-alt"></i>申请</a></li>
+                    <li class="active"><a href="#one" data-toggle="tab" id="onebtn"><i class="fa fa-list-alt"></i>奖学金申请记录</a></li>
+                    <li><a href="#two" data-toggle="tab" id="twobtn"><i class="fa fa-list-alt"></i>申请</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="one">
+                    <div class="tab-pane active" id="one" style="display: block">
                         <form class="well form-search" method="post" action="{:U('StuSc/index')}">
                             奖学金类型:
                             <input type="text" name="type_name" style="width: 120px;" value="{:I('request.type_name/s','')}" >
@@ -61,10 +61,12 @@
                                         <td style="color:orange;font-weight: bold;font-size: 13px;text-align: center;">{$vo.status}</td>
                                     </if>
                                     <td>
-                                        <if condition="$vo['status'] neq '已取消'">
-                                            <a href="{:U('User/StuSc/remove_add',array('id'=>$vo['id']))}" class="rem_sc">取消申请</a>
+                                        <if condition="$vo['status'] eq '申请中'">
+                                            <a href="{:U('StuSc/remove_add',array('id'=>$vo['id']))}" class="rem_sc">取消申请</a>
                                         </if>
-
+                                        <if condition="$vo['status'] eq '审批拒绝'">
+                                            <a href="{:U('StuSc/remove_add',array('id'=>$vo['id']))}" class="rem_sc">取消申请</a>
+                                        </if>
                                     </td>
                                 </tr>
                             </foreach>
@@ -76,7 +78,7 @@
                             </div>
                     </div>
 
-                    <div class="tab-pane active" id="two">
+                    <div class="tab-pane active" id="two" style="display: none">
                         <form method="post" class="js-ajax-form" action="{:U('StuSc/add_post')}">
                             <table   class="table table-hover table-bordered table-list">
                                 <tr>
@@ -181,6 +183,17 @@
 
         });
     }
+    //tab one
+    $('#onebtn').click(function (){
+        $('#two').css('display','none');
+        $('#one').css('display','block');
+    });
+
+    //tab two
+    $('#twobtn').click(function (){
+        $('#one').css('display','none');
+        $('#two').css('display','block');
+    });
 
 </script>
 </body>
