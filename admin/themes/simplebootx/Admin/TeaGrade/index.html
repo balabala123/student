@@ -1,0 +1,119 @@
+<admintpl file="header"/>
+
+</head>
+<style>
+
+</style>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <volist name="class" id="vo">
+           <li <if condition="$class_id eq $vo['class_id']"> class="active"</if>> <a href="{:U('TeaGrade/index',array('id'=>$vo['class_id']))}">{$vo.class_no}</a></li>
+        </volist>
+    </ul>
+    <form  method="post" action="{:U('TeaGrade/grade')}">
+        <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('TeaGrade/grade')}"
+                data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">提交
+        </button>
+        <table class="table table-hover table-bordered table-list" style="width:120%;">
+            <thead>
+            <tr>
+                <th>学生学号</th>
+                <th>学生姓名</th>
+                <th>成绩</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="stu_list" item="vo">
+                <tr>
+                    <td>{$vo.stu_no}</td>
+                    <td>{$vo.stu_name}</td>
+                    <td><input type="number" name="grade[]" value="{$vo.grade}" id="grade">
+                        <input type="hidden" name="stu_id[]" value="{$vo.stu_id}" id="stu_id">
+                        <input type="hidden" name="grade_id[]" value="{$vo.grade_id}">
+                        <!-- <if condition="!empty($vo['grade_id'])">
+                            <input type="hidden" name="grade_id[]" value="{$vo.grade_id}">
+                        <else/>
+
+                        </if>-->
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('TeaGrade/grade')}"
+                data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">提交
+        </button>
+    </form>
+
+</div>
+</body>
+<script src="__PUBLIC__/js/common.js"></script>
+<script>
+
+   $("#button").on("click", function () {
+        var grade = $('#grade').val();
+        var stu_id = $('#stu_id').val();
+        $.ajax({
+                   type: "POST",
+                   url:"{:U('TeaGrade/add_grade')}",
+                   dataType:"json",
+                   data: {
+                       'grade': grade,
+                       'stu_id':stu_id,
+                   },
+                   success: function(data){
+                      alert(data.info);
+                   }
+               }).responseText;
+    });
+
+    //修改三级联动
+   /*  function up_change() {
+        sub_id = $("#up_subj").val();
+        $("#up_depart").text(" ");
+        $.ajax({
+                   type: "POST",
+                   url: "{:U('Teamm/change')}",
+                   dataType: "json",
+                   data: {
+                       'subject_id': sub_id
+                   },
+                   success: function (data) {
+                       delete data['state'];
+                       delete data['referer'];
+                       $.each(data, function (name, value) {
+                           var depart_name = value.depart_name;
+                           var depart_id = value.depart_id;
+                           $("#up_depart").append("<option value='" + depart_id + "'>" + depart_name + "</option>");
+                       })
+                       up_change_two();
+                   }
+               }).responseText;
+    }
+
+    function up_change_two() {
+        depart_id = $("#up_depart").val();
+        $("#_class").text(' ');
+        $.ajax({
+                   type: "POST",
+                   url:"{:U('Stumm/change_two')}",
+                   dataType:"json",
+                   data: {
+                       'depart_id': depart_id
+                   },
+                   success: function(data){
+                       delete data['state'];
+                       delete data['referer'];
+                       $.each(data,function(name,value){
+                           var class_no = value.class_no;
+                           var class_id = value.class_id;
+                           $("#_class").append("<input type='checkbox' name='cls[]' value='" + class_id + "' class='__class'/>"+ class_no);
+                       })
+                   }
+               }).responseText;
+    }*/
+
+
+</script>
+</html>

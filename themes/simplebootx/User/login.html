@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{$site_name}</title>
+<meta name="keywords" content="{$site_seo_keywords}" />
+<meta name="description" content="{$site_seo_description}">
+<meta name="author" content="ThinkCMF">
+<tc_include file="Public:head" />
+</head>
+<body class="body-white1">
+
+
+	<div class="container tc-main">
+		<div class="row">
+			<div class="span4 offset4" style="margin-top: 170px;margin-left: 460px">
+				<form class="form-horizontal js-ajax-form" action="{:U('user/login/dologin')}" method="post">
+					<div class="control-group">
+						<input type="text" id="input_username" name="username" placeholder="用户名" class="span4" required>
+					</div>
+
+					<div class="control-group">
+						<input type="password" id="input_password" name="password" placeholder="密码" class="span4" required>
+					</div>
+
+					<div class="control-group">
+						<div class="span4" style="margin-left: 0px;">
+						<p><input type="text" id="input_verify" name="verify"  placeholder="验证码" style="width:250px;" required>
+							{:sp_verifycode_img('length=4&font_size=14&width=100&height=34&charset=2345678&use_noise=1&use_curve=0')}</p>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<button class="btn btn-primary js-ajax-submit span4" type="submit" style="margin-left: 0px">确定</button>
+					</div>
+					<div class="control-group">
+						<input type="radio" value="1" name="role" style="margin-left: 50px">学生
+						<input type="radio" value="2" name="role" style="margin-left: 40px">教师
+						<input type="radio" value="3" name="role" style="margin-left: 40px">班主任
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<!-- /container -->
+
+	<tc_include file="Public:scripts" />
+</body>
+</html>

@@ -1,0 +1,72 @@
+<admintpl file="header" />
+<body>
+    <style>
+        ul{
+            list-style:none;
+        }
+        #d1{
+            /*border:1px solid red;*/
+            width:1200px;
+            height:450px;
+            margin-top: 30px;
+            margin-left: 50px;
+        }
+        li{
+            margin-top: 10px;
+            float: left;
+            list-style:none;
+            margin-left: 10px;
+        }
+        #d2{
+            margin-top: -200px;
+            margin-left: 800px;
+        }
+        .adds,.dels:hover
+        {
+            cursor:pointer;
+        }
+    </style>
+    <div id="d1">
+        <center><h3>请选择图片</h3></center>
+        <ul id="xuan">
+            <foreach name='src' item='v'>
+                <li class="li">
+                    <div style="width:150px; height:150px;">
+                        <img src="{$v['image_src']}" draggable="true" width="100px" height="100px">
+                    </div>
+                    <a href="{:U('Lunbotu/delete',array('image_id'=>$v['image_id']))}" class="operation" name="del">删除</a>
+            </foreach>
+        </ul>
+    </div>
+    <div id="d2">
+        <form action="{:U('Lunbotu/add')}" method="post" enctype="multipart/form-data">
+            <div id="add_img">
+                <div class="add">
+                    <a class="adds">添加图片</a>
+                    <a class="dels" style="display: none">取消添加</a><br>
+                    <input type="file" name="image[]" required>
+                </div>
+            </div>
+            <input type="submit" value="上传">
+        </form>
+        <span style="color: red">{$msg}</span>
+    </div>
+</body>
+    <script>
+        document.ondragover = function(event){
+            event.preventDefault();
+        };
+        document.ondragdrop = function(event){
+            event.preventDefault();
+        };
+
+        $(".adds").on("click", function(){
+            var div1=$(".add:first").clone(true);
+            div1.find(".dels").css("display","inline");
+            $('#add_img').append(div1);
+        });
+        $(".dels").on("click", function(){
+            this.parentNode.remove();
+        });
+
+    </script>
