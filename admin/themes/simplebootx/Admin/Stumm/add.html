@@ -1,5 +1,13 @@
 <admintpl file="header" />
 </head>
+<style type="text/css">
+    .int{ height: 30px; text-align: left; width: 600px; }
+    label{ width: 200px; margin-left: 20px; }
+    .high{ color: red; }
+    .msg{ font-size: 13px; }
+    .onError{ color: red; }
+    .onSuccess{ color: green; }
+</style>
 <body>
 <div class="wrap">
     <ul class="nav nav-tabs">
@@ -18,7 +26,7 @@
             <div class="control-group">
                 <label class="control-label">身份证号:</label>
                 <div class="controls form-group">
-                    <input type="number" name="stu_pwd" required>
+                    <input type="text" name="stu_pwd" required id="IDcart">
                     <span class="form-required">*</span>
                 </div>
             </div>
@@ -54,7 +62,7 @@
             </div>
         </fieldset>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary js-ajax-submit">{:L('ADD')}</button>
+            <button type="submit" class="btn btn-primary js-ajax-submit" id="input_submit">{:L('ADD')}</button>
             <a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
         </div>
     </form>
@@ -62,7 +70,32 @@
 <script src="__PUBLIC__/js/common.js"></script>
 
 <script>
-
+    //身份证号的验证
+    $("form :input.required").each(function(){
+        var $required = $("<strong class='high'> *</strong>"); //创建元素
+        $(this).parent().append($required); //然后将它追加到文档中
+    });
+    //文本框失去焦点后
+    $('form :input').blur(function(){
+        var $parent = $(this).parent();
+        $parent.find(".formtips").remove();
+        //验证新密码
+        if( $(this).is('#IDcart') ){
+            if( this.value=="" || ( this.value!="" && !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(this.value) )){
+                var errorMsg = '请输入正确的身份证号';
+                $parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+                $("#input_submit").attr("disabled","disabled");
+            }else{
+                var okMsg = '输入正确.';
+                $parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+                $("#input_submit").removeAttr("disabled");
+            }
+        }
+    }).keyup(function(){
+        $(this).triggerHandler("blur");
+    }).focus(function(){
+        $(this).triggerHandler("blur");
+    });//end blur
     //三级联动
     $("#xi").on("change",function(){
         xi_id = $("#xi").val();

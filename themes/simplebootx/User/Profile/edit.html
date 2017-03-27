@@ -7,6 +7,14 @@
 <meta name="author" content="ThinkCMF">
 <tc_include file="Public:head" />
 </head>
+<style type="text/css">
+	.int{ height: 30px; text-align: left; width: 600px; }
+	label{ width: 200px; margin-left: 20px; }
+	.high{ color: red; }
+	.msg{ font-size: 13px; }
+	.onError{ color: red; }
+	.onSuccess{ color: green; }
+</style>
 <body class="body-white" id="top">
 	<tc_include file="Public:nav" />
 
@@ -39,7 +47,7 @@
                                    				<label class="control-label" for="input-sex">性别</label>
                                    				<div class="controls">
                                    					<php>
-	                                   				$sexs=array("0"=>"保密","1"=>"程序猿","2"=>"程序媛");
+	                                   				$sexs=array("0"=>"保密","1"=>"男","2"=>"女");
 	                                   				</php>
                                    					<select id="input-sex" name="sex">
                                    						<foreach name="sexs" item="vo">
@@ -63,7 +71,7 @@
                                    			</div>
                                    			<div class="control-group">
                                    				<div class="controls">
-                                   					<button type="submit" class="btn js-ajax-submit">保存</button>
+                                   					<button type="submit" class="btn js-ajax-submit" id="input_submit">保存</button>
                                    				</div>
                                    			</div>
                                    		</form>
@@ -80,4 +88,31 @@
 
 	<tc_include file="Public:scripts" />
 </body>
+<script>
+	$("form :input.required").each(function(){
+		var $required = $("<strong class='high'> *</strong>"); //创建元素
+		$(this).parent().append($required); //然后将它追加到文档中
+	});
+	//文本框失去焦点后
+	$('form :input').blur(function(){
+		var $parent = $(this).parent();
+		$parent.find(".formtips").remove();
+		//验证新密码
+		if( $(this).is('#input-user_nicename') ){
+			if( this.value=="" || ( this.value!="" && !/^[a-zA-Z0-9_\u4e00-\u9fa5\-\(\)\（\）\\\/]+$/.test(this.value) )){
+				var errorMsg = '请输入字母数字或下划线或汉字!';
+				$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+				$("#input_submit").attr("disabled","disabled");
+			}else{
+				var okMsg = '输入正确.';
+				$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+				$("#input_submit").removeAttr("disabled");
+			}
+		}
+	}).keyup(function(){
+		$(this).triggerHandler("blur");
+	}).focus(function(){
+		$(this).triggerHandler("blur");
+	});//end blur
+</script>
 </html>
