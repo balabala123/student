@@ -76,7 +76,7 @@
                        $("#_class").text(" ");
                        $.ajax({
                                   type: "POST",
-                                  url:"{:U('Stumm/change_two')}",
+                                  url:"{:U('teamm/change_two')}",
                                   dataType:"json",
                                   data: {
                                       'depart_id': depart_id
@@ -101,12 +101,13 @@
         $("#_class").text(" ");
         $.ajax({
                    type: "POST",
-                   url:"{:U('Stumm/change_two')}",
+                   url:"{:U('teamm/change_two')}",
                    dataType:"json",
                    data: {
                        'depart_id': depart_id
                    },
                    success: function(data){
+                       alert(data);
                        delete data['state'];
                        delete data['referer'];
                        $.each(data,function(name,value){

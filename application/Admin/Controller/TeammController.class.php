@@ -74,6 +74,24 @@
             $this->ajaxReturn($dep);
         }
 
+        //三级联动2
+        public function change_two()
+        {
+            $data = $this->classmdl->where('depart_id='.$this->params['depart_id'])->field('class_no,class_id')->select();
+            $data1 = $this->model->where('depart_id='.$this->params['depart_id'])->field('class_id')->select();
+            foreach($data as $k=>$v){
+                foreach($data1 as $value) {
+                    $id = explode('-',$value['class_id']);
+                    foreach($id as $kk=>$vv) {
+                        if($v['class_id'] == $vv) {
+                            unset($data[$k]);
+                        }
+                    }
+                }
+            }
+            $this->ajaxReturn($data);
+        }
+
         //添加教师
         public function add_post() {
             !isset($this->params['tea_name']) && $this->error('请填写教师姓名');
