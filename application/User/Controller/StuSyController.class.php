@@ -2,13 +2,13 @@
 namespace User\Controller;
 use Common\Controller\MemberbaseController;
 
-class StuScController extends MemberbaseController {
+class StuSyController extends MemberbaseController {
     protected $model;
     private $params;
 
     public function _initialize() {
         parent::_initialize();
-        $this->model = D('Reward');
+        $this->model = D('Help');
         $this->params = I('params.');
         $rss = sp_get_current_user();
         $this->id = $rss['rele_id'];
@@ -29,29 +29,21 @@ class StuScController extends MemberbaseController {
         }
 
         //分页
-//        $page = I('post.');
-//
 //        $count=$this->model->where($where)->count();
-//        $total_page = floor($count/8)+1;
-//        if(!empty($page)){
-//            $current_page = I('post.page');
-//        }else{
-//            $current_page = 1;
-//        }
-//        $this->assign('total_page',$total_page);
-//        $this->assign('current_page',$current_page);
+//        $page = $this->page($count, 8);
+//        $this->assign("page", $page->show('Admin'));
 
-        $Reward_msg = M('Reward_msg');
+        $Help_msg = M('Help_msg');
 
         $res = $this->model->where($where)->select();
         foreach($res as $k=>$v){
             $data[$k]['id'] = $v['id'];
             $data[$k]['type_name'] = $v['type_name'];
 
-            $sel = $Reward_msg->field('money')->where(array('type_name'=>$v['type_name']))->find();
+            $sel = $Help_msg->field('money')->where(array('type_name'=>$v['type_name']))->find();
             $data[$k]['money'] = $sel['money'];
 
-            $data[$k]['sc_note'] = $v['sc_note'];
+            $data[$k]['sy_note'] = $v['sy_note'];
             $data[$k]['create_time'] = date("Y/m/d H:i",$v['create_time']);
             if($v['status'] == 0){
                 $data[$k]['status'] = '申请中';
@@ -67,10 +59,9 @@ class StuScController extends MemberbaseController {
             }
 
         }
+        $this->assign('data',$data);
 
-        //add
-
-        $Reward_msg = M("Reward_msg");
+        $Help_msg = M("Help_msg");
         $Student = M("Student");
         $where['disabled'] = 0;
 
@@ -79,13 +70,13 @@ class StuScController extends MemberbaseController {
         $where['end_time'] = array('egt',time());
 
         //查询用户所在班级所有学生
-        $stu = $Student->query('select stu_id from cmf_student where(class_id = (select class_id from cmf_student where(stu_id = 8)));');
+        $stu = $Student->query("select stu_id from cmf_student where(class_id = (select class_id from cmf_student where(stu_id = '$stu_id')));");
 
         foreach($stu as $v){
             $stu_ids[] = $v['stu_id'];
         }
 
-        $sel = $Reward_msg->field('type_name')->where($where)->select();
+        $sel = $Help_msg->field('type_name')->where($where)->select();
         foreach ($sel as $k=>$v){
             $str['type_name'] = $v['type_name'];
             $str['stu_id'] = array('in',$stu_ids);
@@ -95,18 +86,16 @@ class StuScController extends MemberbaseController {
             $res1 = $this->model->where($str)->count();
 
             //查询奖学金类型对应的名额
-            $res2 = $Reward_msg->field('quota')->where(array('type_name'=>$v['type_name']))->find();
+            $res2 = $Help_msg->field('quota')->where(array('type_name'=>$v['type_name']))->find();
 
             $type[$k]['sheng'] = $res2['quota'] - $res1;
 
             $type[$k]['type_name'] = $v['type_name'];
         }
         $this->assign("type",$type);
-        $this->assign('data',$data);
-
 
         //dataoftype
-        $res_type = $Reward_msg->field('type_name')->where(array('disabled'=>0))->select();
+        $res_type = $Help_msg->field('type_name')->where(array('disabled'=>0))->select();
         foreach($res_type as $v){
             $dataoftype[] = $v['type_name'];
         }
@@ -125,11 +114,12 @@ class StuScController extends MemberbaseController {
                 break;
         }
         $this->assign($this->user);
+
         $this -> display();
     }
 
 //    public function add(){
-//        $Reward_msg = M("Reward_msg");
+//        $Help_msg = M("Help_msg");
 //        $Student = M("Student");
 //        $where['disabled'] = 0;
 //
@@ -140,11 +130,11 @@ class StuScController extends MemberbaseController {
 //        //查询用户所在班级所有学生
 //        $stu = $Student->query('select stu_id from cmf_student where(class_id = (select class_id from cmf_student where(stu_id = 8)));');
 //
-//       foreach($stu as $v){
-//           $stu_ids[] = $v['stu_id'];
-//       }
+//        foreach($stu as $v){
+//            $stu_ids[] = $v['stu_id'];
+//        }
 //
-//        $sel = $Reward_msg->field('type_name')->where($where)->select();
+//        $sel = $Help_msg->field('type_name')->where($where)->select();
 //        foreach ($sel as $k=>$v){
 //            $str['type_name'] = $v['type_name'];
 //            $str['stu_id'] = array('in',$stu_ids);
@@ -154,7 +144,7 @@ class StuScController extends MemberbaseController {
 //            $res1 = $this->model->where($str)->count();
 //
 //            //查询奖学金类型对应的名额
-//            $res2 = $Reward_msg->field('quota')->where(array('type_name'=>$v['type_name']))->find();
+//            $res2 = $Help_msg->field('quota')->where(array('type_name'=>$v['type_name']))->find();
 //
 //            $type[$k]['sheng'] = $res2['quota'] - $res1;
 //
@@ -162,26 +152,13 @@ class StuScController extends MemberbaseController {
 //        }
 ////        print_r($type);die;
 //        $this->assign("type",$type);
-//
-//        switch($this->role) {
-//            case 2:
-//                $this->assign('role', 1);
-//                break;
-//            case 3:
-//                $this->assign('role', 2);
-//                break;
-//            case 4:
-//                $this->assign('role', 3);
-//                break;
-//        }
-//        $this->assign($this->user);
 //        $this->display();
 //    }
 
     public function add_post(){
         $data = I('post.');
         $Student = M("Student");
-        $Reward_msg = M("Reward_msg");
+        $Help_msg = M("Help_msg");
 
 
         $stu_id = $this->id;
@@ -206,8 +183,9 @@ class StuScController extends MemberbaseController {
         $str['disabled'] = 0;
 
         $res1 = $this->model->where($str)->count();
+
         //查询奖学金类型对应的名额
-        $res2 = $Reward_msg->field('quota')->where(array('type_name'=>$data['type_name']))->find();
+        $res2 = $Help_msg->field('quota')->where(array('type_name'=>$data['type_name']))->find();
         $p = $res2['quota'] - $res1;
         if($p == 0){
             $this->error('没有名额了!');
@@ -216,12 +194,12 @@ class StuScController extends MemberbaseController {
         //检查是否重复添加
         $find = $this->model->where(array('type_name'=>$data['type_name'],'disabled'=>0,'stu_id'=>$data['stu_id']))->find();
         if ($find) {
-            $this->error('已经申请过同类型奖学金!');
+            $this->error('已经申请过同类型助学金!');
         }
 
         if ($this->model->create($data)!==false) {
             if ($this->model->add()!==false) {
-                $this->success('提交成功!', U('StuSc/index'));
+                $this->success('提交成功!', U('StuSy/index'));
             } else {
                 $this->error('提交失败!');
             }
