@@ -124,7 +124,7 @@ class StuScController extends MemberbaseController {
                 $this->assign('role', 3);
                 break;
         }
-        $this->assign($this->user);
+//        $this->assign($this->user);
         $this -> display();
     }
 

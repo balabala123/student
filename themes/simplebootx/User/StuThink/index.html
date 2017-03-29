@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{$site_name}</title>
+    <meta name="keywords" content="{$site_seo_keywords}" />
+    <meta name="description" content="{$site_seo_description}">
+    <meta name="author" content="ThinkCMF">
+    <tc_include file="Public:head" />
+    <admintpl file="fontheader" />
+    <style>
+        .ping {
+            position: relative;
+            bottom: 4px;
+        }
+        label {
+            width:20px;
+            display:inline;
+        }
+    </style>
+</head>
+<body class="body-white" id="top">
+<tc_include file="Public:nav" />
+
+<div class="container tc-main">
+    <div class="row">
+        <div class="span3">
+            <if condition="$role eq 1">
+                <tc_include file="Public:usernav"/>
+                <elseif condition="$role eq 2"/>
+                <tc_include file="Public:teanav"/>
+                <elseif condition="$role eq 3"/>
+                <tc_include file="Public:bannav"/>
+            </if>
+        </div>
+        <div class="span9">
+            <div class="wrap js-check-wrap">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="{:U('StuThink/index')}">成绩中心</a></li>
+                </ul>
+                <form method="post" class="js-ajax-form" action="{:U('StuThink/add')}">
+                    <table  style="" class="table table-hover table-bordered table-list">
+                        <tr>
+                            <th>学生姓名</th>
+                            <th>综合素质等级</th>
+                            <th>学生姓名</th>
+                            <th>综合素质等级</th>
+                            <th>学生姓名</th>
+                            <th>综合素质等级</th>
+                        </tr>
+                        <foreach name="data" item="vo" >
+                            <tr>
+                                <td>{$vo.0.stu_name}</td>
+                                <td>
+                                    <label><input type="radio" name="{$vo.0.stu_id}" class="ping" value="A"> A</label>
+                                    <label><input type="radio" name="{$vo.0.stu_id}" class="ping" value="B"> B</label>
+                                    <label><input type="radio" name="{$vo.0.stu_id}" class="ping" value="C"> C</label>
+                                    <label><input type="radio" name="{$vo.0.stu_id}" class="ping" value="D"> D</label>
+                                </td>
+
+                                <if condition="array_key_exists(1,$vo)" >
+                                    <td >{$vo.1.stu_name}</td>
+                                    <td>
+                                        <label><input type="radio" name="{$vo.1.stu_id}" class="ping" value="A"> A</label>
+                                        <label><input type="radio" name="{$vo.1.stu_id}" class="ping" value="B"> B</label>
+                                        <label><input type="radio" name="{$vo.1.stu_id}" class="ping" value="C"> C</label>
+                                        <label><input type="radio" name="{$vo.1.stu_id}" class="ping" value="D"> D</label>
+                                    </td>
+                                    <else />
+                                    <td></td>
+                                    <td></td>
+                                </if>
+
+                                <if condition="array_key_exists(2,$vo)" >
+                                    <td >{$vo.2.stu_name}</td>
+                                    <td>
+                                        <label><input type="radio" name="{$vo.2.stu_id}" class="ping" value="A"> A</label>
+                                        <label><input type="radio" name="{$vo.2.stu_id}" class="ping" value="B"> B</label>
+                                        <label><input type="radio" name="{$vo.2.stu_id}" class="ping" value="C"> C</label>
+                                        <label><input type="radio" name="{$vo.2.stu_id}" class="ping" value="D"> D</label>
+                                    </td>
+                                    <else />
+                                    <td></td>
+                                    <td></td>
+                                </if>
+                            </tr>
+                        </foreach>
+                    </table>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
+                        <a class="btn" href="javascript:history.back(-1);">返回</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <tc_include file="Public:footer" />
+
+</div>
+<!-- /container -->
+
+<tc_include file="Public:scripts" />
+<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>
