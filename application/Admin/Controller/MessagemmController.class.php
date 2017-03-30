@@ -89,7 +89,7 @@
             $data['class_id'] = $this->params['ban_class'];
             //工号start
             $ban_no = $this->model->max(ban_no);
-            $ban_no = substr($ban_no,-1,2);
+            $ban_no = substr($ban_no,-2,2);
             if(!isset($ban_no) || empty($ban_no)) {
                 $ban_no = '01';
             }else{
@@ -133,14 +133,35 @@
             $id = $this->params['ban_id'];
             if(is_array($ids)) {
                 $where['ban_id'] = array('in', $ids);
+                $where_re['rele_id'] = array('in', $ids);
             } elseif(is_numeric($id)) {
                 $where['ban_id'] = $id;
+                $where_re['rele_id'] = $id;
+            }
+            $where || $this->error(L('NO_DATA'));
+            //得到用户表中的id
+            $user_id = $this->usermdl->where($where_re)->field('id')->select();
+            foreach($user_id as $k=>$v) {
+                $user_ids[] = $v['id'];
+            }
+            $www['user_id'] = array('in',$user_ids);
+            $role = M('role_user');
+            $role_id = $role->where($www)->getfield('user_id,role_id');
+            foreach($role_id as $k=>$v) {
+                if($v!=4) {
+                    foreach($user_ids as $kk=>$vv) {
+                        if($vv == $k){
+                            unset($user_ids[$kk]);
+                        }
+                    }
+                }
             }
 
-            $where || $this->error(L('NO_DATA'));
             $no = $this->model->where($where)->field('ban_no,class_id')->select();
+            $where_user['id'] = array('in',$user_ids);
             $res = $this->model->where($where)->delete();
             if($res) {
+                $this->usermdl->where($where_user)->delete();
                 foreach($no as $value) {
                     $where_no['ban_no'] = array('gt',$value['ban_no']);
                     $where_no['class_id'] = $value['class_id'];
