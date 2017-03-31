@@ -200,7 +200,8 @@
 
         public function get_data() {
             $data = $this->model->where('ban_id='.$this->params['ban_id'])->find();
-            $data['c_id'] = $data['id'];
+            $class_no = $this->classmdl->where('class_id='.$data['class_id'])->find();
+            $data['class_no'] = $class_no['class_no'];
             $this->ajaxReturn($data);
         }
 
@@ -215,7 +216,7 @@
             $depart_id = $this->params['depart_id'];
             $class_id = $this->params['class_id'];
             $ban_name = $this->params['ban_name'];
-            //从数据库中拿到class_id
+           /* //从数据库中拿到class_id
             $mdep = $this->model->getFieldByban_id($ban_id, 'depart_id');
             //从数据库中拿到原有的xi_id
             $mxi = $this->model->getFieldByban_id($ban_id, 'xi_id');
@@ -227,16 +228,25 @@
                 $data['ban_name'] = $ban_name;
             }else{
                 $data['ban_name'] = $ban_name;
-            }
+            }*/
+            $data['depart_id'] = $depart_id;
+            $data['xi_id'] = $xi_id;
+            $data['class_id'] = $class_id;
+            $data['ban_name'] = $ban_name;
+            //对比用户姓名是否一致，如果不一致需更改用户表
             $mname = $this->model->getFieldByban_id($ban_id, 'ban_name');
             if($this->model->where('ban_id='.$ban_id)->save($data)){
-                $where_u['user_login'] = $mname;
-                $where_u['rele_id'] = $ban_id;
-                if($this->usermdl->where($where_u)->save(array('user_login'=>$data['ban_name']))) {
-                    $this->success("修改成功");
-                }else{
-                    $this->error("修改用户失败");
-                }
+                 if($mname != $ban_name) {
+                     $where_u['user_login'] = $mname;
+                     $where_u['rele_id'] = $ban_id;
+                     if ($this->usermdl->where($where_u)->save(array('user_login' => $data['ban_name']))) {
+                         $this->success("修改成功");
+                     } else {
+                         $this->error("修改用户失败");
+                     }
+                 }else{
+                     $this->success("修改成功");
+                 }
             }else{
                 $this->error('修改失败');
             }

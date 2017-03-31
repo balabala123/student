@@ -50,6 +50,8 @@
                 $data[$key]['sub'] = $sub['subject_name'];
                 $clsd = explode('-',$item['class_id']);
                 $where['class_id'] = array('in',$clsd);
+                $dep = $this->depmdl->where("depart_id=" . $item['depart_id'])->field('depart_name')->find();
+                $data[$key]['dep'] = $dep['depart_name'];
                 $clsno = $this->classmdl->where($where)->field('class_no')->select();
                 foreach($clsno as $value) {
                     $data[$key]['class_no'] .= $value['class_no'].' ';
