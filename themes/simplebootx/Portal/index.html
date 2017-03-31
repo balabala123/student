@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 	<html>
 	<head>
-		<title>{$site_seo_title} {$site_name}</title>
+		<title>首页</title>
 		<meta name="keywords" content="{$site_seo_keywords}" />
 		<meta name="description" content="{$site_seo_description}">
 		<tc_include file="Public:head" />
@@ -48,7 +48,7 @@ $home_slides=empty($home_slides)?$default_home_slides:$home_slides;
 		<div class="caption-wraper">
 			<div class="caption">中北大学信息商务学院</div>
 		</div>
-		<center><a href="{$vo.slide_url}"><img src="{:sp_get_asset_upload_path($vo['image_src'])}" alt="" style="width: 1600px"></a></center>
+		<center><a href="{$vo.slide_url}"><img src="{:sp_get_asset_upload_path($vo['image_src'])}" alt="" style="width: 1600px;height:660px"></a></center>
 	</li>
 	</foreach>
 </ul>
@@ -56,13 +56,13 @@ $home_slides=empty($home_slides)?$default_home_slides:$home_slides;
 	
 	<div>
 		<h1 class="text-center">了解中北信商</h1>
-		<h3 class="text-center">校园风采</h3>
+		<h3 class="text-center">学院风采</h3>
 	</div>
 	<div class="row">
 		<volist name="post" id="vvv" offset="0" length='3'>
 		<div class="span4">
-			 <h2 class="font-large nospace"><i class="fa fa-bars"></i> {$vvv['post_title']}</h2>
-             {$vvv.post_content}
+			 <h2 class="font-large nospace"><i class="fa fa-bars"></i> <a href="{:U('portal/list/index',array('id'=>$vvv['id']))}" style="color: black">{$vvv['post_title']}</a></h2>
+			<a href="{:U('portal/list/index',array('id'=>$vvv['id']))}" style="color: black">{$vvv.post_excerpt}</a>
 		</div>
 		</volist>
 	</div>
@@ -70,8 +70,8 @@ $home_slides=empty($home_slides)?$default_home_slides:$home_slides;
 	<div class="row">
 		<volist name="post" id="vvv" offset="3" length='3'>
 			<div class="span4">
-				<h2 class="font-large nospace"><i class="fa fa-cubes"></i> {$vvv['post_title']}</h2>
-				{$vvv.post_content}
+				<h2 class="font-large nospace"><i class="fa fa-cubes"></i> <a href="{:U('portal/list/index',array('id'=>$vvv['id']))}" style="color: black">{$vvv['post_title']}</a></h2>
+				<a href="{:U('portal/list/index',array('id'=>$vvv['id']))}" style="color: black">{$vvv.post_excerpt}</a>
 			</div>
 		</volist>
 	</div>
@@ -79,8 +79,8 @@ $home_slides=empty($home_slides)?$default_home_slides:$home_slides;
 	<div class="row">
 		<volist name="post" id="vvv" offset="6" length='3'>
 			<div class="span4">
-				<h2 class="font-large nospace"><i class="fa fa-certificate"></i> {$vvv['post_title']}</h2>
-				{$vvv.post_content}
+				<h2 class="font-large nospace"><i class="fa fa-certificate"></i> <a href="{:U('portal/list/index',array('id'=>$vvv['id']))}" style="color: black">{$vvv['post_title']}</a></h2>
+				<a href="{:U('portal/list/index',array('id'=>$vvv['id']))}" style="color: black">{$vvv.post_excerpt}</a>
 			</div>
 		</volist>
 	</div>
