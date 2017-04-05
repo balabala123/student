@@ -89,21 +89,7 @@ class AdminPostController extends AdminbaseController {
 	// 文章编辑提交
 	public function edit_post(){
 		if (IS_POST) {
-			if(empty($_POST['term'])){
-				$this->error("请至少选择一个分类！");
-			}
 			$post_id=intval($_POST['post']['id']);
-			
-			$this->term_relationships_model->where(array("object_id"=>$post_id,"term_id"=>array("not in",implode(",", $_POST['term']))))->delete();
-			foreach ($_POST['term'] as $mterm_id){
-				$find_term_relationship=$this->term_relationships_model->where(array("object_id"=>$post_id,"term_id"=>$mterm_id))->count();
-				if(empty($find_term_relationship)){
-					$this->term_relationships_model->add(array("term_id"=>intval($mterm_id),"object_id"=>$post_id));
-				}else{
-					$this->term_relationships_model->where(array("object_id"=>$post_id,"term_id"=>$mterm_id))->save(array("status"=>1));
-				}
-			}
-			
 			if(!empty($_POST['photos_alt']) && !empty($_POST['photos_url'])){
 				foreach ($_POST['photos_url'] as $key=>$url){
 					$photourl=sp_asset_relative_url($url);

@@ -21,7 +21,7 @@
             $this->depmdl = M('depart');
             $this->classmdl = M('class');
             $this->usermdl = M('users');
-            $this->pageNum = 5;
+            $this->pageNum = 10;
         }
 
         public function index() {
@@ -50,6 +50,8 @@
                 $data[$key]['sub'] = $sub['subject_name'];
                 $clsd = explode('-',$item['class_id']);
                 $where['class_id'] = array('in',$clsd);
+                $dep = $this->depmdl->where("depart_id=" . $item['depart_id'])->field('depart_name')->find();
+                $data[$key]['dep'] = $dep['depart_name'];
                 $clsno = $this->classmdl->where($where)->field('class_no')->select();
                 foreach($clsno as $value) {
                     $data[$key]['class_no'] .= $value['class_no'].' ';
@@ -142,12 +144,34 @@
             $id = $this->params['teacher_id'];
             if(is_array($ids)) {
                 $where['teacher_id'] = array('in', $ids);
+                $where_re['rele_id'] = array('in', $ids);
             } elseif(is_numeric($id)) {
                 $where['teacher_id'] = $id;
+                $where_re['rele_id'] = $id;
             }
             $where || $this->error(L('NO_DATA'));
+            //得到用户表中的id
+            $user_id = $this->usermdl->where($where_re)->field('id')->select();
+            foreach($user_id as $k=>$v) {
+                $user_ids[] = $v['id'];
+            }
+            $www['user_id'] = array('in',$user_ids);
+            $role = M('role_user');
+            $role_id = $role->where($www)->getfield('user_id,role_id');
+            foreach($role_id as $k=>$v) {
+                if($v!=3) {
+                    foreach($user_ids as $kk=>$vv) {
+                        if($vv == $k){
+                            unset($user_ids[$kk]);
+                        }
+                    }
+                }
+            }
+
+            $where_user['id'] = array('in',$user_ids);
             $res = $this->model->where($where)->delete();
             if($res) {
+                $this->usermdl->where($where_user)->delete();
                 $this->success("删除成功");
             }else{
                 $this->error("删除失败");

@@ -20,7 +20,7 @@
             $this->depmdl = M('depart');
             $this->classmdl = M('class');
             $this->usermdl = M('users');
-            $this->pageNum = 10;
+            $this->pageNum = 100;
         }
 
         //查看学生信息
@@ -131,13 +131,45 @@
             $id = $this->params['stu_id'];
             if(is_array($ids)) {
                 $where['stu_id'] = array('in', $ids);
+                $where_re['rele_id'] = array('in', $ids);
             } elseif(is_numeric($id)) {
                 $where['stu_id'] = $id;
+                $where_re['rele_id'] = $id;
             }
             $where || $this->error(L('NO_DATA'));
+            //由于有成绩外键关联，所以在删除时，要将成绩表中的数据一起删除
+            $grade_mdl = M('grade');
+            $grade_ids = $grade_mdl->where($where)->field('grade_id')->select();
+            if($grade_ids) {
+                foreach ($grade_ids as $k => $v) {
+                    $grade_id[] = $v['grade_id'];
+                }
+                $where_grade['grade_id'] = array('in', $grade_id);
+                $grade_mdl->where($where_grade)->delete();
+            }
             $no = $this->model->where($where)->field('stu_no,class_id')->select();
+            //得到用户表中的id
+            $user_id = $this->usermdl->where($where_re)->field('id')->select();
+            foreach($user_id as $k=>$v) {
+                $user_ids[] = $v['id'];
+            }
+            $www['user_id'] = array('in',$user_ids);
+            $role = M('role_user');
+            $role_id = $role->where($www)->getfield('user_id,role_id');
+            foreach($role_id as $k=>$v) {
+                if($v!=2) {
+                    foreach($user_ids as $kk=>$vv) {
+                        if($vv == $k){
+                            unset($user_ids[$kk]);
+                        }
+                    }
+                }
+            }
+
+            $where_user['id'] = array('in',$user_ids);
             $res = $this->model->where($where)->delete();
             if($res) {
+                $this->usermdl->where($where_user)->delete();
                 foreach($no as $value) {
                     $where_no['stu_no'] = array('gt',$value['stu_no']);
                     $where_no['class_id'] = $value['class_id'];

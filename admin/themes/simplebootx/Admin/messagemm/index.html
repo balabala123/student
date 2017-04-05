@@ -202,21 +202,18 @@
                        'ban_id': span
                    },
                    success: function(data){
-                       //console.log(data);
+                      // console.log(data);
                        $('#up_name').val(data.ban_name);
                        $('#up_id').val(data.ban_id);
                        $('#up_xi').val(data.xi_id);
-                       up_change();
-                       // alert(data.depart_id);
-                       $('#up_depart').val(data.depart_id);
-                       $('#up_class').val(data.class_id);
+                       up_change(data.depart_id,data.class_id,data.class_no);
                        $('#up_div').slideToggle("slow");
                    }
                }).responseText;
     });
 
     //修改三级联动
-    function up_change() {
+    function up_change(depart_id,class_id,class_no) {
         xi_id = $("#up_xi").val();
         $("#up_depart").text(" ");
         $.ajax({
@@ -234,12 +231,15 @@
                            var depart_id = value.depart_id;
                            $("#up_depart").append("<option value='" + depart_id + "'>" + depart_name + "</option>");
                        })
-                       up_change_two();
+                       if(depart_id) {
+                           $('#up_depart').val(depart_id);
+                       }
+                       up_change_two(class_id,class_no);
                    }
                }).responseText;
     }
 
-    function up_change_two() {
+    function up_change_two(class_id,class_no) {
         depart_id = $("#up_depart").val();
         $("#up_class").text(' ');
         $.ajax({
@@ -257,6 +257,9 @@
                            var class_id = value.class_id;
                            $("#up_class").append("<option value='"+class_id+"'>" + class_no + "</option>");
                        })
+                       if(class_id) {
+                           $("#up_class").append("<option value='"+class_id+"' selected>" + class_no + "</option>");
+                       }
                    }
                }).responseText;
     }

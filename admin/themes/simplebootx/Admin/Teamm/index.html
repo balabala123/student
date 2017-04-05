@@ -79,6 +79,7 @@
                 <th>教师姓名</th>
                 <th>教师工号</th>
                 <th>教授课程</th>
+                <th>教授专业</th>
                 <th>教授班级</th>
                 <th>{:L("ACTIONS")}</th>
             </tr>
@@ -96,6 +97,7 @@
                     <td>{$vo.teacher_name}</td>
                     <td>{$vo.teacher_no}</td>
                     <td>{$vo.sub}</td>
+                    <td>{$vo.dep}</td>
                     <td>{$vo.class_no}</td>
                     <td>
                         <a class="js-ajax-delete" href="{:U('Teamm/delete',array('teacher_id'=>$vo['teacher_id']))}">{:L('DELETE')}</a>
@@ -112,6 +114,7 @@
                 <th>教师姓名</th>
                 <th>教师工号</th>
                 <th>教授课程</th>
+                <th>教授专业</th>
                 <th>教授班级</th>
                 <th>{:L("ACTIONS")}</th>
             </tr>

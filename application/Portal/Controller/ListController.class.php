@@ -15,20 +15,23 @@ class ListController extends HomebaseController {
 	public function index() {
 	    $term_id=I('get.id',0,'intval');
 		$term=sp_get_term($term_id);
-		
-		if(empty($term)){
-		    header('HTTP/1.1 404 Not Found');
-		    header('Status:404 Not Found');
-		    if(sp_template_file_exists(MODULE_NAME."/404")){
-		        $this->display(":404");
-		    }
-		    return;
+		$post = M('posts');
+		$post_hits = $post->where('id='.$term_id)->field('post_hits')->find();
+		$post_hits = ++$post_hits['post_hits'];
+		$arr = array('id'=>$term_id,
+					'post_hits'=>$post_hits);
+		$post->where('id='.$term_id)->save($arr);
+		$list = $post->where('id='.$term_id)->find();
+		$smeta= json_decode($list['smeta']);
+		$aaa = $smeta->photo;
+		foreach($aaa as $k=>$v) {
+			$list['photo'][] = $v->url;
 		}
-		
+		$this->assign('list',$list);
 		$tplname=$term["list_tpl"];
-    	$tplname=sp_get_apphome_tpl($tplname, "list");
-    	$this->assign($term);
-    	$this->assign('cat_id', $term_id);
+		$tplname=sp_get_apphome_tpl($tplname, "list");
+		$this->assign($term);
+		$this->assign('cat_id', $term_id);
     	$this->display(":$tplname");
 	}
 	

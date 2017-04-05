@@ -37,9 +37,18 @@
                 $where['depart_id'] = get_search_str($dep['depart_id']) ;
             }
             //搜索end
+            //修改
+            if ($this->params['subject_id']) {
+                $sub = $this->model->where('subject_id='.$this->params['subject_id'])->find();
+                $this->assign('sub',$sub);
+            }
+            $data = $this->depmdl->select();
+            $this->assign('list',$data);
             $count = $this->model->where($where)->count();
             $page = $this->page($count, $this->pageNum);
             $data = $this->model->where($where)->limit($page->firstRow , $page->listRows)->select();
+            $dep = $this->depmdl->select();
+            $this->assign('dep',$dep);
             $this->assign("page", $page->show('Admin'));
             $this->assign('list',$data);
             $this->display();
@@ -92,6 +101,7 @@
             !isset($this->params['score']) && $this->error('绩点不能为空');
             $data['subject_name'] = $this->params['name'];
             $data['score'] = $this->params['score'];
+            $data['depart_id'] = implode(',',$this->params['dep']);
             $id = $this->params['id'];
             $bool = $this->model->where('subject_id=' . $id)->save($data);
             if ($bool) {
