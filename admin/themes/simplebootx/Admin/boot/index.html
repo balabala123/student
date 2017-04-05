@@ -201,9 +201,9 @@ right: initial !important;}
 							<i class="fa fa-caret-down"></i>
 						</a>
 						<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
-							<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/setting/site')">
-								<li><a href="javascript:openapp('{:U('setting/site')}','index_site','{:L('ADMIN_SETTING_SITE')}');"><i class="fa fa-cog"></i> {:L('ADMIN_SETTING_SITE')}</a></li>
-							</if>
+							<!--<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/setting/site')">-->
+								<!--<li><a href="javascript:openapp('{:U('setting/site')}','index_site','{:L('ADMIN_SETTING_SITE')}');"><i class="fa fa-cog"></i> {:L('ADMIN_SETTING_SITE')}</a></li>-->
+							<!--</if>-->
 							<if condition="sp_auth_check(sp_get_current_admin_id(),'admin/user/userinfo')">
 								<li><a href="javascript:openapp('{:U('user/userinfo')}','index_userinfo','{:L('ADMIN_USER_USERINFO')}');"><i class="fa fa-user"></i> {:L('ADMIN_USER_USERINFO')}</a></li>
 							</if>
