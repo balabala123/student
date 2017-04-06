@@ -59,28 +59,6 @@
             foreach($arr as $k=>$v){
                 $arr[$k]['paiming'] = $k+1;
             }
-//            print_r($arr);die;
-            $post = I('post.');
-            if($post){//导出Excel
-                $xlsName  = "班级学生成绩";
-                $xlsCell  = array(
-                    array('no','学生学号'),
-                    array('name','学生姓名'),
-                );
-                foreach($sub as $k=>$v){
-
-                    $xlsCell[$k+2] = array($v,$v);
-                }
-                $cc = count($xlsCell);
-                $xlsCell[$cc] = array('sum','总分');
-                $xlsCell[$cc+1] = array('paiming','排名');
-//                print_r($xlsCell);
-//                $xlsModel = M('Post');
-//                $xlsData  = $xlsModel->Field('id,account,nickname')->select();
-                $xlsData = $arr;
-                $this->exportExcel($xlsName,$xlsCell,$xlsData);
-
-            }
 
             $this->display();
         }
