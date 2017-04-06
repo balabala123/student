@@ -112,6 +112,6 @@
 //                $xlsData  = $xlsModel->Field('id,account,nickname')->select();
                 $xlsData = $arr;
             $export = new ExcelController;
-            $export->exportExcelForLabel('班级学生成绩',$xlsName,$xlsCell,$xlsData);
+            $export->exportExcelForLabel('学生成绩汇总',$xlsName,$xlsCell,$xlsData);
         }
     }

@@ -327,5 +327,8 @@
 
         public function export() {
             !isset($this->params['choose_data']) && $this->error('请选择要导出的数据');
+            $ids = explode(',',$this->params);
+            $where = array('in',$ids);
+            $res = $this->model->where($where)->select();
         }
     }
