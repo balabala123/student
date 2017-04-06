@@ -1,6 +1,12 @@
 <admintpl file="header" />
 
 <style>
+    #pageowncss ul{
+
+    }
+    #pageowncss ul li {
+        list-style:none;
+    }
 
 </style>
 </head>
@@ -64,7 +70,8 @@
             <!--<th width="50">操作</th>-->
         <!--</tfoot>-->
     </table>
-    <div class="pagination">{$page}</div>
+    <div class="pagination" id="pageowncss">{$page}</div>
+    <!--<div  id="pageowncss">{$page}</div>-->
 </div>
 <script src="__PUBLIC__/js/common.js"></script>
 <script>

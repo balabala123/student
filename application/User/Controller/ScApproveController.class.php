@@ -2,13 +2,13 @@
 namespace User\Controller;
 use Common\Controller\MemberbaseController;
 
-class ApApproveController extends MemberbaseController {
+class ScApproveController extends MemberbaseController {
     protected $model;
     private $params;
 
     public function _initialize() {
         parent::_initialize();
-        $this->model = D('Add_point');
+        $this->model = D('Reward');
         $this->params = I('params.');
     }
 
@@ -16,8 +16,8 @@ class ApApproveController extends MemberbaseController {
 //        $stu_id =get_current_admin_id();
 //        $stu_id = get_current_userid();
 //        print_r($stu_id);die;
-        $where['cmf_add_point.disabled'] = 0;
-        $where['cmf_add_point.status'] = 0;
+        $where['cmf_reward.disabled'] = 0;
+        $where['cmf_reward.status'] = 0;
         //搜索
         $xi_name = trim(I('request.xi_name'));
         $depart_name = trim(I('request.depart_name'));
@@ -35,7 +35,7 @@ class ApApproveController extends MemberbaseController {
             $where['class_id'] = array('like',"%$class_id%");
         }
         if($type_name != ''){
-            $where['cmf_add_point.type_name'] = array('like',"%$type_name%");
+            $where['cmf_reward.type_name'] = array('like',"%$type_name%");
         }
         if($stu_name != ''){
             $where['stu_name'] = array('like',"%$stu_name%");
@@ -45,16 +45,16 @@ class ApApproveController extends MemberbaseController {
         }
         //分页
         $count=$this->model->where($where)->count();
-        $page = $this->page($count, 2);
-        $this->assign("page", $page->show());
+        $page = $this->page($count, 8);
+        $this->assign("page", $page->show('Admin'));
 
-        $res = $this->model->field('stu_name,cmf_xi.xi_name,cmf_depart.depart_name,class_id,cmf_add_point.id,cmf_add_point.type_name,cmf_student.stu_no')
-            ->join('cmf_student on cmf_student.stu_id = cmf_add_point.stu_id')
-            ->join('cmf_xi on cmf_xi.xi_id = cmf_student.xi_id')
-            ->join('cmf_depart on cmf_depart.depart_id = cmf_student.depart_id')
-            ->limit($page->firstRow , $page->listRows)
-            ->where($where)
-            ->select();
+        $res = $this->model->field('stu_name,cmf_xi.xi_name,cmf_depart.depart_name,class_id,cmf_reward.id,cmf_reward.type_name,cmf_student.stu_no')
+                            ->join('cmf_student on cmf_student.stu_id = cmf_reward.stu_id')
+                            ->join('cmf_xi on cmf_xi.xi_id = cmf_student.xi_id')
+                            ->join('cmf_depart on cmf_depart.depart_id = cmf_student.depart_id')
+                            ->limit($page->firstRow , $page->listRows)
+                            ->where($where)
+                            ->select();
 //        print_r($this->model->getLastsql());die;
         foreach($res as $k=>$v){
             $data[$k]['id'] = $v['id'];
@@ -73,15 +73,9 @@ class ApApproveController extends MemberbaseController {
 
     public function check(){
         $id = I("get.id",0,'intval');
-        $sel = $this->model->field('start_time,end_time,add_res,add_note')->where(array('id'=>$id))->find();
-        $start_time = date('Y-m-d H:i:s',$sel['start_time']);
-        $end_time = date('Y-m-d H:i:s',$sel['end_time']);
-        $add_res = $sel['add_res'];
-        $add_note = $sel['add_note'];
-        $this->assign('start_time',$start_time);
-        $this->assign('end_time',$end_time);
-        $this->assign('add_res',$add_res);
-        $this->assign('add_note',$add_note);
+        $sel = $this->model->field('sc_note')->where(array('id'=>$id))->find();
+        $sc_note = $sel['sc_note'];
+        $this->assign('sc_note',$sc_note);
         $this->display();
     }
 
