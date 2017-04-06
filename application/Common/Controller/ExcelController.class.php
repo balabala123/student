@@ -247,17 +247,27 @@ class ExcelController extends Controller
         vendor("PHPExcel.PHPExcel");
         $objPHPExcel = new \PHPExcel();
         $cellName = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+        $objPHPExcel->getActiveSheet(0)->mergeCells('A1:'.$cellName[$cellNum-1].'1');//合并单元格
+        $objPHPExcel->getActiveSheet()->getStyle('2')->getFont()->setBold(true);//加粗
+        $objPHPExcel->getActiveSheet()->getStyle('2')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);//居中
 
-        for ($i = 0; $i < $cellNum; $i++) {
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($cellName[$i] . '1', $expCellName[$i][1]);
-            
+        $objPHPExcel->getActiveSheet() -> getColumnDimension() -> setAutoSize(true);
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A1', $expTitle.'         导出时间:'.date('Y-m-d,H:m:s'));
+       // $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(100);
+        for($i=0;$i<$cellNum;$i++){
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($cellName[$i].'2', $expCellName[$i][1]);
         }
         // Miscellaneous glyphs, UTF-8
-        for ($i = 0; $i < $dataNum; $i++) {
-            for ($j = 0; $j < $cellNum; $j++) {
-                $objPHPExcel->getActiveSheet(0)->setCellValue($cellName[$j] . ($i + 2), $expTableData[$i][$expCellName[$j][0]]);
+        for($i=0;$i<$dataNum;$i++){
+            for($j=0;$j<$cellNum;$j++){
+                $objPHPExcel->getActiveSheet(0)->setCellValue($cellName[$j].($i+3), $expTableData[$i][$expCellName[$j][0]]);
+                $objPHPExcel->getActiveSheet()->getStyle($i+3)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);//居中
             }
         }
+        //设置边框
+        $columnnum = $dataNum+2;
+        $objPHPExcel->getActiveSheet()->getStyle('A1:'.$cellName[$cellNum-1].$columnnum)->getBorders()->getAllBorders()->setBorderStyle(\PHPExcel_Style_Border::BORDER_THIN);
 
         header('pragma:public');
         header('Content-type:application/vnd.ms-excel;charset=utf-8;name="' . $xlsTitle . '.xls"');

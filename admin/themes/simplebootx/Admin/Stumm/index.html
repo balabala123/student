@@ -76,6 +76,8 @@
             <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('Stumm/delete')}"
                     data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">{:L('DELETE')}
             </button>
+            <a class="btn btn-primary btn-small" OnClick='_import()'>导入</a>
+            <a class="btn btn-primary btn-small" OnClick='_export()'>导出</a>
         </div>
         <table class="table table-hover table-bordered table-list" style="width:120%;">
             <thead>
@@ -287,5 +289,53 @@
                    }
                }).responseText;
     })
+
+    function _import(){
+        Wind.use('artDialog', 'iframeTools', function () {
+            var ImportUrl = "{:U('Import_import')}";
+            art.dialog.open(ImportUrl, {
+                title: '导入',
+                lock: true,
+                height: 150,
+                width: "40%",
+                // 在open()方法中，init会等待iframe加载完毕后执行
+                init: function () {
+                    var iframe = this.iframe.contentWindow;
+                    var top = art.dialog.top;// 引用顶层页面window对象
+
+                },
+                ok: function () {
+                    return true;
+                },
+                cancel: true
+            });
+        });
+    }
+
+    function _export(){
+        var chk_value =[];
+        //get checkbox value
+        $('input[class="js-check"]:checked').each(function(){
+            chk_value.push($(this).val());
+        });
+        //将数组序列成字符串
+        var choose_data = chk_value.join(",");alert(choose_data);
+        $.ajax({
+                   type: "POST",
+                   url: "{:U('Stumm/export')}",
+                   data: "choose_data="+choose_data,
+                   success: function(msg){
+                       alert(msg);
+                      /* art.dialog({
+                                      id: 'warning',
+                                      icon: 'warning',
+                                      content: '导出成功正在列表，请稍后！',
+                                      ok: function () {
+                                          //reloadPage(window);
+                                      }
+                                  });*/
+                   }
+               });
+    }
 </script>
 </html>

@@ -2,6 +2,7 @@
     namespace Admin\Controller;
 
     use Common\Controller\AdminbaseController;
+    use Common\Controller\ExcelController;
 
     class StummController extends AdminbaseController {
 
@@ -11,6 +12,7 @@
         private $depmdl;
         private $classmdl;
         private $pageNum;
+        private $excel;
 
         public function _initialize() {
             $this->params = I('param.');
@@ -21,6 +23,7 @@
             $this->classmdl = M('class');
             $this->usermdl = M('users');
             $this->pageNum = 100;
+            $this->excel = new ExcelController;
         }
 
         //查看学生信息
@@ -278,5 +281,51 @@
             } else {
                 $this->success("修改成功", U('Stumm/index'));
             }
+        }
+
+        public function Import_import() {
+            $url = CONTROLLER_NAME."/import_export";
+            $this->assign("url",$url);
+            $this->display('Import/import');
+        }
+
+        public function import_export(){
+            if(IS_POST){
+                $config=array(
+                        'exts'=>array('xlsx','xls'),
+                        'rootPath' =>  './data/',
+                        'savePath'=>'excel/import/',
+                        'saveRule'=>'time',
+                    );
+                    $upload = new \Think\Upload($config);
+                    $info = $upload->upload();
+                    if($info){
+                        $params['info'] = $info;
+                    }else{
+                        $this->error($upload->getError());
+                    }
+                }
+                $arr = $this->excel->importExecl($info);
+            echo "<pre>";
+            print_r($arr);
+            exit;
+                /*这应该是队列
+                 * $action = I('post.action');
+                $controller = CONTROLLER_NAME;
+                // $model = MODULE_NAME;
+                $task_name = CONTROLLER_NAME.' '.$action;
+                $task_id = add_tasks($controller,$action,$params,$task_name,$queue_type);
+                if($task_id){
+                    if($queue_type == 1){
+                        $this->ajaxReturn($queue_type);
+                    }else{
+                        $this->success('已添入导入队列，等待执行！');
+                    }
+                }*/
+            }
+            //print_r($_FILES);
+
+        public function export() {
+            !isset($this->params['choose_data']) && $this->error('请选择要导出的数据');
         }
     }
