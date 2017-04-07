@@ -7,7 +7,6 @@
     <meta name="author" content="ThinkCMF">
     <tc_include file="Public:head" />
     <admintpl file="fontheader" />
-    <link href="__PUBLIC__/simpleboot/css/fontpagecss.css" rel="stylesheet" type="text/css">
 
 </head>
 <body class="body-white" id="top">
@@ -73,7 +72,10 @@
                         </foreach>
                         </tbody>
                     </table>
-                    <div class="pagination">{$page}</div>
+
+                    <div class="paging-content" style="margin-top: 20px;">
+                        <div id="address-paging" class="tcdPageCode"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,13 +87,31 @@
 <!-- /container -->
 
 <tc_include file="Public:scripts" />
-</body>
-</html>
-
 
 
 <script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.page.js" ></script>
 <script>
+
+    $(function() {
+        var sss = "{$total_num}";
+        var ccc = "{$current_page}";
+        if (sss > 1) {
+            $(".paging-content").css("display", "block");
+        } else {
+            $(".paging-content").css("display", "none");
+        }
+        //分页管理
+        $("#address-paging").createPage({
+            pageCount: sss,
+            current: ccc,
+            backFn:function(page){
+                console.log(page);
+                $('body').load("{:U('ApApprove/index')}",{page:page});
+            }
+        });
+    });
+
     //通过操作
     if ($('.passbtn').length) {
         Wind.use('artDialog', function () {

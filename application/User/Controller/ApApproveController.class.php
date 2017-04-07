@@ -13,6 +13,9 @@ class ApApproveController extends MemberbaseController {
     }
 
     public function index(){
+
+
+
 //        $stu_id =get_current_admin_id();
 //        $stu_id = get_current_userid();
 //        print_r($stu_id);die;
@@ -43,16 +46,24 @@ class ApApproveController extends MemberbaseController {
         if($stu_no != ''){
             $where['stu_no'] = array('like',"%$stu_no%");
         }
+
         //分页
+        $page = I('post.');
         $count=$this->model->where($where)->count();
-        $page = $this->page($count, 2);
-        $this->assign("page", $page->show());
+        $total_page = ceil($count/6);
+        if(!empty($page)){
+            $current_page = I('post.page');
+        }else{
+            $current_page = 1;
+        }
+
 
         $res = $this->model->field('stu_name,cmf_xi.xi_name,cmf_depart.depart_name,class_id,cmf_add_point.id,cmf_add_point.type_name,cmf_student.stu_no')
             ->join('cmf_student on cmf_student.stu_id = cmf_add_point.stu_id')
             ->join('cmf_xi on cmf_xi.xi_id = cmf_student.xi_id')
             ->join('cmf_depart on cmf_depart.depart_id = cmf_student.depart_id')
-            ->limit($page->firstRow , $page->listRows)
+//            ->limit($page->firstRow , $page->listRows)
+            ->limit(($current_page-1)*6,6)
             ->where($where)
             ->select();
 //        print_r($this->model->getLastsql());die;
@@ -68,6 +79,8 @@ class ApApproveController extends MemberbaseController {
         }
 
         $this->assign('data',$data);
+        $this->assign("current_page",$current_page);
+        $this->assign("total_num",$total_page);
         $this -> display();
     }
 

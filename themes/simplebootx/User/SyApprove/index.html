@@ -77,7 +77,10 @@
                         </foreach>
                         </tbody>
                     </table>
-                    <div class="pagination">{$page}</div>
+                    <!--<div class="pagination">{$page}</div>-->
+                    <div class="paging-content">
+                        <div id="address-paging" class="tcdPageCode"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,15 +90,41 @@
 
 </div>
 <!-- /container -->
-
 <tc_include file="Public:scripts" />
-</body>
-</html>
-
 
 
 <script src="__PUBLIC__/js/common.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/jquery.page.js" ></script>
 <script>
+    $(function() {
+//        settingdeaddress();
+        if ({$total_page} > 1) {
+            $(".paging-content").css("display", "block");
+        } else {
+            $(".paging-content").css("display", "none");
+        }
+        //分页管理
+        $("#address-paging").createPage({
+            pageCount: {$total_page},
+            current: {$current_page},
+            backFn:function(page){
+                $('.main-content').load("{:U('ApApprove/index')}",{page:page});
+            }
+        });
+
+        function settingdeaddress(){
+            $(".info").each(function(index,item){
+                var tt = $(this).attr("deadresss");
+                if(tt == 1){
+                    $(this).addClass("defultAddress");
+                }else{
+                    $(this).removeClass("defultAddress");
+                }
+            });
+        }
+    });
+
+
     //通过操作
     if ($('.passbtn').length) {
         Wind.use('artDialog', function () {
@@ -155,7 +184,7 @@
 </script>
 
 <script>
-    //通过操作
+    //驳回操作
     if ($('.rebutbtn').length) {
         Wind.use('artDialog', function () {
             $('.rebutbtn').on('click', function (e) {
