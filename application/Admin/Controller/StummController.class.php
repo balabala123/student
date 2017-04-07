@@ -13,6 +13,7 @@
         private $classmdl;
         private $pageNum;
         private $excel;
+        private $db_prefix;
 
         public function _initialize() {
             $this->params = I('param.');
@@ -22,8 +23,9 @@
             $this->depmdl = M('depart');
             $this->classmdl = M('class');
             $this->usermdl = M('users');
-            $this->pageNum = 100;
+            $this->pageNum = 10;
             $this->excel = new ExcelController;
+            $this->db_prefix = C('DB_PREFIX');
         }
 
         //查看学生信息
@@ -69,25 +71,25 @@
 
         //添加学生
         public function add_post() {
-            !isset($this->params['stu_name']) && $this->error('请填写学生姓名');
-            !isset($this->params['stu_pwd']) && $this->error('请填写学生身份证号');
-            !isset($this->params['stu_xi']) && $this->error('请选择院系');
-            !isset($this->params['stu_dep']) && $this->error('请选择专业');
-            !isset($this->params['stu_class']) && $this->error('请选择班级');
-            if($this->params['stu_xi'] == '--请选择院系--'){
-                $this->error('请选择院系');
-            }
-            if($this->params['stu_dep'] == '--请选择专业--'){
-                $this->error('请选择专业');
-            }
-            if($this->params['stu_class'] == '--请选择班级--'){
-                $this->error('请选择班级');
-            }
-            $data['stu_name'] = $this->params['stu_name'];
-            $data['xi_id'] = $this->params['stu_xi'];
-            $data['depart_id'] = $this->params['stu_dep'];
-            $data['class_id'] = $this->params['stu_class'];
-            $data['stu_pwd'] = sp_password($this->params['stu_pwd']);
+                !isset($this->params['stu_name']) && $this->error('请填写学生姓名');
+                !isset($this->params['stu_pwd']) && $this->error('请填写学生身份证号');
+                !isset($this->params['stu_xi']) && $this->error('请选择院系');
+                !isset($this->params['stu_dep']) && $this->error('请选择专业');
+                !isset($this->params['stu_class']) && $this->error('请选择班级');
+                if($this->params['stu_xi'] == '--请选择院系--'){
+                    $this->error('请选择院系');
+                }
+                if($this->params['stu_dep'] == '--请选择专业--'){
+                    $this->error('请选择专业');
+                }
+                if($this->params['stu_class'] == '--请选择班级--'){
+                    $this->error('请选择班级');
+                }
+                $data['stu_name'] = $this->params['stu_name'];
+                $data['xi_id'] = $this->params['stu_xi'];
+                $data['depart_id'] = $this->params['stu_dep'];
+                $data['class_id'] = $this->params['stu_class'];
+                $data['stu_pwd'] = sp_password($this->params['stu_pwd']);
             //学号start
             $class_no = $this->classmdl->where('class_id='.$data['class_id'])->field('class_no')->find();
             $stu_no = $this->model->where('class_id='.$data['class_id'])->max(stu_no);
@@ -124,6 +126,55 @@
                 }
             } else {
                 $this->error("添加失败");
+            }
+
+        }
+
+        //导入添加
+        public function import_add_post($params) {
+            if($params) {
+                $data['stu_name'] = $params['stu_name'];
+                $data['xi_id'] = $params['xi_id'];
+                $data['depart_id'] = $params['depart_id'];
+                $data['class_id'] = $params['class_id'];
+                $data['stu_pwd'] = sp_password($params['stu_pwd']);
+                //学号start
+                $class_no = $this->classmdl->where('class_id=' . $data['class_id'])->field('class_no')->find();
+                $stu_no = $this->model->where('class_id=' . $data['class_id'])->max(stu_no);
+                $stu_no = substr($stu_no, -2, 2);
+                if (!isset($stu_no) || empty($stu_no)) {
+                    $stu_no = '01';
+                } else {
+                    $stu_no = ++$stu_no;
+                    if ($stu_no <= 9) {
+                        $stu_no = '0' . $stu_no;
+                    }
+                }
+                $data['stu_no'] = $class_no['class_no'] . $stu_no;
+                //end
+                if ($this->model->data($data)->add()) {
+                    $id = $this->model->where('stu_no=' . $data['stu_no'])->field('stu_id')->find();
+                    $data_logn['user_login'] = $data['stu_name'];
+                    $data_logn['rele_id'] = $id['stu_id'];
+                    $data_logn['user_type'] = 2;
+                    $data_logn['user_pass'] = $data['stu_pwd'];
+                    $data_logn['user_email'] = '823650031@qq.com';
+                    if ($this->usermdl->data($data_logn)->add()) {
+                        $id = $this->usermdl->where("user_login='" . $data_logn['user_login'] . "'")->field('id')->find();
+                        $role_mdl = M('role_user');
+                        $data_role['role_id'] = 2;
+                        $data_role['user_id'] = $id['id'];
+                        if ($role_mdl->data($data_role)->add()) {
+                            return 1;
+                        } else {
+                            return 2;
+                        }
+                    } else {
+                        return 2;
+                    }
+                } else {
+                    return 2;
+                }
             }
 
         }
@@ -306,29 +357,88 @@
                     }
                 }
                 $arr = $this->excel->importExecl($info);
-            echo "<pre>";
-            print_r($arr);
-            exit;
-                /*这应该是队列
-                 * $action = I('post.action');
-                $controller = CONTROLLER_NAME;
-                // $model = MODULE_NAME;
-                $task_name = CONTROLLER_NAME.' '.$action;
-                $task_id = add_tasks($controller,$action,$params,$task_name,$queue_type);
-                if($task_id){
-                    if($queue_type == 1){
-                        $this->ajaxReturn($queue_type);
-                    }else{
-                        $this->success('已添入导入队列，等待执行！');
-                    }
-                }*/
+                $data = $arr['data'][0];
+            if($data['Content'][1][0] != '学生姓名' || $data['Content'][1][1] != '身份证号' || $data['Content'][1][2] != '院系' || $data['Content'][1][3] != '专业' ||$data['Content'][1][4] != '班级') {
+                $this->error('请导入正确格式的文件！');
             }
-            //print_r($_FILES);
+            unset($data['Content'][1]);
+            foreach($data['Content'] as $k=>$v) {
+                if(!$v[0]) {
+                    unset($data['Content'][$k]);
+                }
+                foreach ($v as $kk => $vv) {
+                    if ($kk > 4) {
+                        unset($data['Content'][$k][$kk]);
+                    }
+                }
+            }
+
+            foreach($data['Content'] as $k=>$v) {
+                if($v[0]){
+                    $list[$k]['stu_name'] = $v[0];
+                }else{
+                    $this->error('导入的学生姓名数据不合法！');
+                }
+                if(preg_match("/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/",$v[1])){
+                    $list[$k]['stu_pwd'] = $v[1];
+                }else{
+                    $this->error('导入的身份证号数据不合法！');
+                }
+
+                if(preg_match("/^[\x7f-\xff]+$/",$v[2])){
+                    $xi = $this->ximdl->where('xi_name='."'".$v[2]."'")->getfield('xi_id');
+                    $list[$k]['xi_id'] = $xi;
+                }else{
+                    $this->error('导入的院系数据不合法！');
+                }
+                if(preg_match("/^[\x7f-\xff]+$/",$v[3])){
+                    $dep = $this->depmdl->where('depart_name='."'".$v[3]."'")->getfield('depart_id');
+                    $list[$k]['depart_id'] = $dep;
+                }else{
+                    $this->error('导入的专业数据不合法！');
+                }
+                if(is_numeric($v[4])){
+                    $class = $this->classmdl->where('class_no='."'".$v[4]."'")->getfield('class_id');
+                    $list[$k]['class_id'] = $class;
+                }else{
+                    $this->error('导入的班级数据不合法！');
+                }
+            }
+          foreach($list as $v) {
+              $res[] = $this->import_add_post($v);
+          }
+            if(in_array(2,$res)) {
+                $this->error('导入部分数据失败');
+            }else{
+                $this->success('导入成功');
+            }
+        }
+
 
         public function export() {
             !isset($this->params['choose_data']) && $this->error('请选择要导出的数据');
-            $ids = explode(',',$this->params);
-            $where = array('in',$ids);
-            $res = $this->model->where($where)->select();
+            $ids = explode(',',$this->params['choose_data']);
+            $where['s.stu_id'] = array('in',$ids);
+            $list = $this->model->alias('s')
+                ->join("left join {$this->db_prefix}depart as d on d.depart_id = s.depart_id")
+                ->join("left join {$this->db_prefix}class as c on c.class_id = s.class_id")
+                ->join("left join {$this->db_prefix}xi as x on x.xi_id = s.xi_id")
+                ->where($where)
+                ->field('s.stu_name,s.stu_no,d.depart_name,c.class_no,x.xi_name')
+                ->group('c.class_no')
+                ->order('s.stu_no')
+                ->select();
+
+            $xlsName  = "学生信息表";
+            $xlsCell  = array(
+                array('stu_no','学生学号'),
+                array('stu_name','学生姓名'),
+                array('xi','院系'),
+                array('depart','专业'),
+                array('class','班级'),
+            );
+            $xlsData = $list;
+            $export = new ExcelController;
+            $export->exportExcelForLabel('学生信息汇总',$xlsName,$xlsCell,$xlsData);
         }
     }
