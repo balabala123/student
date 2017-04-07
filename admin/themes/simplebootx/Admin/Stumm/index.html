@@ -305,7 +305,7 @@
 
                 },
                 ok: function () {
-                    return true;
+                    location.reload();
                 },
                 cancel: true
             });
@@ -319,21 +319,13 @@
             chk_value.push($(this).val());
         });
         //将数组序列成字符串
-        var choose_data = chk_value.join(",");alert(choose_data);
+        var choose_data = chk_value.join(",");
         $.ajax({
                    type: "POST",
                    url: "{:U('Stumm/export')}",
                    data: "choose_data="+choose_data,
-                   success: function(msg){
-                       alert(msg);
-                      /* art.dialog({
-                                      id: 'warning',
-                                      icon: 'warning',
-                                      content: '导出成功正在列表，请稍后！',
-                                      ok: function () {
-                                          //reloadPage(window);
-                                      }
-                                  });*/
+                   success: function(data){
+
                    }
                });
     }
