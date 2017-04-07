@@ -425,7 +425,6 @@
                 ->join("left join {$this->db_prefix}xi as x on x.xi_id = s.xi_id")
                 ->where($where)
                 ->field('s.stu_name,s.stu_no,d.depart_name,c.class_no,x.xi_name')
-                ->group('c.class_no')
                 ->order('s.stu_no')
                 ->select();
 
