@@ -79,19 +79,5 @@
             html.jqprint();
     });
 
-    $("#exportexcel").on("click", function() {
-        $.ajax({
-            type: "POST",
-            url: "{:U('Ban/index')}",
-            data: {
-                'exdata': 'data',
-            },
-            success: function(){
-
-            }
-
-        });
-    });
-
 </script>
 </html>
