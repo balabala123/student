@@ -20,7 +20,7 @@
 <div class="container tc-main">
     <div class="row">
         <div class="span3">
-                <tc_include file="Public:bannav"/>
+            <tc_include file="Public:bannav"/>
         </div>
         <div class="span9">
             <div class="tabs">
@@ -50,7 +50,7 @@
                                 <td>{$vo.no}</td>
                                 <td>{$vo.name}</td>
                                 <foreach name="sub_list" item="item">
-                                 <td>{$vo.$item}</td>
+                                    <td>{$vo.$item}</td>
                                 </foreach>
                                 <td>{$vo.sum}</td>
                                 <td>{$i}</td>
@@ -75,22 +75,8 @@
 <script type="text/javascript" src="__PUBLIC__/js/jqprint/jquery-migrate-1.2.1.min.js"></script>
 <script>
     $("#print").on("click", function() {
-            var html = $('#table');
-            html.jqprint();
-    });
-
-    $("#exportexcel").on("click", function() {
-        $.ajax({
-            type: "POST",
-            url: "{:U('Ban/index')}",
-            data: {
-                'exdata': 'data',
-            },
-            success: function(){
-
-            }
-
-        });
+        var html = $('#table');
+        html.jqprint();
     });
 
 </script>
