@@ -44,12 +44,12 @@
                     <table class="table table-hover table-bordered table-list">
                         <thead>
                         <tr>
-                            <th width="80">院系</th>
-                            <th width="100">专业</th>
-                            <th width="20">班级</th>
-                            <th width="35">学生姓名</th>
+                            <th width="80" style="text-align: center;">院系</th>
+                            <th width="100" style="text-align: center;">专业</th>
+                            <th width="20" style="text-align: center;">班级</th>
+                            <th width="35" style="text-align: center;">姓名</th>
                             <th width="30" style="text-align: center;">学号</th>
-                            <th width="90">加分项类型</th>
+                            <th width="90" style="text-align: center;">加分项类型</th>
                             <th width="20" style="text-align: center;">详情</th>
                             <th width="40" style="text-align: center;">操作</th>
                         </tr>
@@ -57,12 +57,12 @@
                         <tbody>
                         <foreach name="data" item="vo">
                             <tr>
-                                <td>{$vo.xi_name}</td>
-                                <td>{$vo.depart_name}</td>
+                                <td style="text-align: center;">{$vo.xi_name}</td>
+                                <td style="text-align: center;">{$vo.depart_name}</td>
                                 <td style="text-align: center;">{$vo.class_id}</td>
                                 <td style="text-align: center;">{$vo.stu_name}</td>
                                 <td style="text-align: center;">{$vo.stu_no}</td>
-                                <td>{$vo.type_name}</td>
+                                <td style="text-align: center;">{$vo.type_name}</td>
                                 <td style="text-align: center;"><a href="{:U('ApApprove/check',array('id'=>$vo['id']))}" target="_blank">查看</a></td>
                                 <td style="text-align: center;">
                                     <a href="{:U('ApApprove/pass',array('id'=>$vo['id']))}" class="passbtn">通过</a>|
