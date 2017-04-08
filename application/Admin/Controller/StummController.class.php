@@ -34,17 +34,20 @@
             $this->assign('xi',$xi_data);
             //搜索start
             if ($this->params['stu_name']) {
-                $where['stu_name'] = $this->params['stu_name'] ;
+                $name = $this->params['stu_name'];
+                $where['stu_name'] =  array('like',"%$name%");
             }
-            if ($this->params['stu_xi']) {
-                $where['xi_id'] = $this->params['stu_xi'] ;
+            if ($this->params['xi_id']) {
+                $where['xi_id'] = $this->params['xi_id'] ;
             }
-            if ($this->params['stu_dep']) {
-                $where['depart_id'] = $this->params['stu_dep'] ;
+            if ($this->params['depart_id']) {
+                $where['depart_id'] = $this->params['depart_id'] ;
             }
-            if ($this->params['stu_class']) {
-                $where['class_id'] = $this->params['stu_class'] ;
+            if ($this->params['class_id']) {
+                $where['class_id'] = $this->params['class_id'] ;
             }
+
+//            print_r($where);die;
             //搜索end
             $count = $this->model->where($where)->count();
             $page = $this->page($count, $this->pageNum);
@@ -59,6 +62,54 @@
             }
             $this->assign("page", $page->show('Admin'));
             $this->assign('list',$data);
+
+            //导出
+            $this->assign('sea_data',$this->params);
+            $get_data = I('get.');
+//            print_r($get_ex);
+
+            if($get_data['exex']){
+//                print_r(I('get.'));die;
+                foreach($get_data['sea_return'] as $k=>$v){
+                    if($k == 'depart_id'){
+                        $get_data2['d.'.$k] = $v;
+                    }elseif($k == 'class_id'){
+                        $get_data2['c.'.$k] = $v;
+                    }elseif($k == 'xi_id'){
+                        $get_data2['x.'.$k] = $v;
+                    }else{
+                        $get_data2[$k] = array('like',"%$v%");
+                    }
+
+                }
+//                print_r($get_data2);die;
+                $ex_where =  array_filter($get_data2);
+//                print_r($ex_where);die;
+                $list = $this->model->alias('s')
+                    ->join("left join {$this->db_prefix}depart as d on d.depart_id = s.depart_id")
+                    ->join("left join {$this->db_prefix}class as c on c.class_id = s.class_id")
+                    ->join("left join {$this->db_prefix}xi as x on x.xi_id = s.xi_id")
+                    ->where($ex_where)
+                    ->field('s.stu_name,s.stu_no,d.depart_name,c.class_no,x.xi_name')
+                    ->order('s.stu_no')
+                    ->select();
+//                print_r($this->model->getLastsql());die;
+//                print_r($list);die;
+
+                $xlsName  = "学生信息表";
+                $xlsCell  = array(
+                    array('stu_no','学生学号'),
+                    array('stu_name','学生姓名'),
+                    array('xi_name','院系'),
+                    array('depart_name','专业'),
+                    array('class_no','班级'),
+                );
+                $xlsData = $list;
+//            print_r($list);die;
+                $export = new ExcelController;
+                $export->exportExcelForLabel('学生信息汇总',$xlsName,$xlsCell,$xlsData);
+            }
+
             $this->display();
         }
 
@@ -416,14 +467,14 @@
 
 
         public function export() {
-            !isset($this->params['choose_data']) && $this->error('请选择要导出的数据');
+//            !isset($this->params['choose_data']) && $this->error('请选择要导出的数据');
             $ids = explode(',',$this->params['choose_data']);
             $where['s.stu_id'] = array('in',$ids);
             $list = $this->model->alias('s')
                 ->join("left join {$this->db_prefix}depart as d on d.depart_id = s.depart_id")
                 ->join("left join {$this->db_prefix}class as c on c.class_id = s.class_id")
                 ->join("left join {$this->db_prefix}xi as x on x.xi_id = s.xi_id")
-                ->where($where)
+//                ->where($where)
                 ->field('s.stu_name,s.stu_no,d.depart_name,c.class_no,x.xi_name')
                 ->order('s.stu_no')
                 ->select();
@@ -437,7 +488,64 @@
                 array('class','班级'),
             );
             $xlsData = $list;
+//            print_r($list);die;
             $export = new ExcelController;
             $export->exportExcelForLabel('学生信息汇总',$xlsName,$xlsCell,$xlsData);
+        }
+
+
+
+
+        function export_grade(){
+            $class_id = $this->banmdl->where('ban_id='.$this->id)->getField('class_id');
+            $stu = $this->stumdl->where('class_id='.$class_id)->field('stu_name,stu_id,stu_no')->select();
+            foreach($stu as $k=>$v) {
+                $data[$k] = $this->mdl->where('stu_id='.$v['stu_id'])->select();
+                $data[$k]['name'] = $v['stu_name'];
+                $data[$k]['no'] = $v['stu_no'];
+            }
+            foreach($data as $k=>$v) {
+                foreach($v as $key=>$value) {
+                    if($key != 'name' && $key != 'no') {
+                        $arr[$k]['name'] = $v['name'];
+                        $arr[$k]['no'] = $v['no'];
+                        $subject = $this->submdl->where('subject_id=' . $value['subject_id'])->getfield('subject_name');
+                        $arr[$k][$subject] = $value['grade'];
+                        $arr[$k]['sum'] += $value['grade'];
+                    }
+                }
+            }
+
+            foreach($arr[0] as $k=>$v) {
+                if($k != 'name' && $k != 'no' && $k != 'sum') {
+                    $sub[] = $k;
+                }
+            }
+            $newArr=array();
+            for($j=0;$j<count($arr);$j++){
+                $newArr[]=$arr[$j]['sum'];
+            }
+            array_multisort($newArr,SORT_DESC,$arr);
+            foreach($arr as $k=>$v){
+                $arr[$k]['paiming'] = $k+1;
+            }
+            $xlsName  = "班级学生成绩";
+            $xlsCell  = array(
+                array('no','学生学号'),
+                array('name','学生姓名'),
+            );
+            foreach($sub as $k=>$v){
+
+                $xlsCell[$k+2] = array($v,$v);
+            }
+            $cc = count($xlsCell);
+            $xlsCell[$cc] = array('sum','总分');
+            $xlsCell[$cc+1] = array('paiming','排名');
+//                print_r($xlsCell);
+//                $xlsModel = M('Post');
+//                $xlsData  = $xlsModel->Field('id,account,nickname')->select();
+            $xlsData = $arr;
+            $export = new ExcelController;
+            $export->exportExcelForLabel('学生成绩汇总',$xlsName,$xlsCell,$xlsData);
         }
     }
