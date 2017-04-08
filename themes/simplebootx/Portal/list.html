@@ -17,6 +17,7 @@
 	<foreach name="list.photo" item = "v">
 		<center><img src="/student/data/upload/{$v}" style="width: 700px;height: 350px"></center><br>
 	</foreach>
+	{:Comments("posts",$list.post_id)}
     <tc_include file="Public:footer" />
 </div>
 
