@@ -293,10 +293,23 @@ class ExcelController extends Controller
         }*/
         //Vendor("PHPExcel.PHPExcel.IOFactory");
         if($info){
+//            print_r($info['file']['ext']);die;
             $file_name='./data/'.$info['file']['savepath'].$info['file']['savename'];
             if(file_exists($file_name)) {
                 vendor("PHPExcel.PHPExcel");
-                $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+                if( $info['file']['ext'] =='xlsx' || $info['file']['ext'] =='xls')
+                {
+//                    print_r(111);die;
+                    $objReader = new \PHPExcel_Reader_Excel2007();
+//                    $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+//                    $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+                }
+                else
+                {
+//                    $objReader = new PHPExcel_Reader_Excel5();
+                    $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+                }
+
                 //try {
                    $PHPReader = $objReader->load($file_name,$encode='utf-8');
                 /*} catch (Exception $e) {
