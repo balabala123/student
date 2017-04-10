@@ -67,13 +67,12 @@
             $this->assign('list',$data);
 
             //导出
-            $this->assign('sea_data',$this->params);
-            $get_data = I('get.');
-//            print_r($get_ex);
+            $this->assign('sea_data',$where);
+            $get_data = $this->params['sea_return'];
 
-            if($get_data['exex']){
+            if($this->params['exex'] == 'export'){
 //                print_r(I('get.'));die;
-                foreach($get_data['sea_return'] as $k=>$v){
+                foreach($get_data as $k=>$v){
                     if($k == 'depart_id'){
                         $get_data2['d.'.$k] = $v;
                     }elseif($k == 'class_id'){
@@ -85,9 +84,7 @@
                     }
 
                 }
-//                print_r($get_data2);die;
                 $ex_where =  array_filter($get_data2);
-//                print_r($ex_where);die;
                 $list = $this->model->alias('s')
                     ->join("left join {$this->db_prefix}depart as d on d.depart_id = s.depart_id")
                     ->join("left join {$this->db_prefix}class as c on c.class_id = s.class_id")
@@ -98,7 +95,6 @@
                     ->select();
 //                print_r($this->model->getLastsql());die;
 //                print_r($list);die;
-
                 $xlsName  = "学生信息表";
                 $xlsCell  = array(
                     array('stu_no','学生学号'),
