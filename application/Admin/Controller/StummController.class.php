@@ -37,17 +37,20 @@
                 $name = $this->params['stu_name'];
                 $where['stu_name'] =  array('like',"%$name%");
             }
-            if ($this->params['xi_id']) {
-                $where['xi_id'] = $this->params['xi_id'] ;
+            if ($this->params['xi_id'] && $this->params['xi_id'] != '--请选择院系--') {
+                    $where['xi_id'] = $this->params['xi_id'];
+                    $this->assign('xi_id',$this->params['xi_id']);
             }
-            if ($this->params['depart_id']) {
-                $where['depart_id'] = $this->params['depart_id'] ;
+            if ($this->params['depart']) {
+                    $depart_id = $this->depmdl->where('depart_name='."'".$this->params['depart']."'")->getfield('depart_id');
+                    $where['depart_id'] = $depart_id;
             }
-            if ($this->params['class_id']) {
-                $where['class_id'] = $this->params['class_id'] ;
+            if ($this->params['class']) {
+                    $class_id = $this->classmdl->where('class_no='."'".$this->params['class']."'")->getfield('class_id');
+                    $where['class_id'] = $class_id;
             }
 
-//            print_r($where);die;
+  //          print_r($where);die;
             //搜索end
             $count = $this->model->where($where)->count();
             $page = $this->page($count, $this->pageNum);

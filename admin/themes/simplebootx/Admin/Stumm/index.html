@@ -27,22 +27,18 @@
     </ul>
     <form  method="post" action="{:U('Stumm/index')}">
         学生姓名:
-        <input type="text" name="stu_name" style="width: 100px;" value="{:I('request.stu_name/s','')}" placeholder="请填写学生姓名">
+        <input type="text" name="stu_name" style="width: 200px;" value="{:I('request.stu_name/s','')}" placeholder="请填写学生姓名">
         所属院系:
         <select style="width: 223px;" name="xi_id" id="xi"  onchange="change()">
-            <option disabled selected>--请选择院系--</option>
+            <option>--请选择院系--</option>
             <volist name="xi" id="vo">
-                <option value="{$vo.xi_id}">{$vo.xi_name}</option>
+                <option value="{$vo.xi_id}" <if condition="$xi_id eq $vo['xi_id']">selected</if>>{$vo.xi_name}</option>
             </volist>
         </select>
         所属专业:
-        <select style="width: 223px;" name="depart_id" id="depart"   onchange="change_two()">
-            <option disabled selected>--请选择专业--</option>
-        </select>
+        <input type="text" name="depart" style="width: 200px;" value="{:I('request.depart/s','')}" placeholder="请填写专业名称">
         所属班级:
-        <select style="width: 223px;" name="class_id" id="class">
-            <option disabled selected>--请选择班级--</option>
-        </select><br>
+        <input type="text" name="class" style="width: 200px;" value="{:I('request.class/s','')}" placeholder="请填写班级号"><br>
         <input type="submit" class="btn btn-primary" value="搜索" />
         <a class="btn btn-danger" href="{:U('Stumm/index')}">清空</a>
     </form>
@@ -142,55 +138,7 @@
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__PUBLIC__/js/combo.select/jquery.combo.select.js"></script>
 <script>
-    $("select[name=stu_xi]").comboSelect();
-    //三级联动
-    function change(){
-        xi_id = $("#xi").val();
-        $("#depart").text(" ");
-        $("#depart").append("<option disabled selected value=0>--请选择专业--</option>");
-        $.ajax({
-                   type: "POST",
-                   url:"{:U('Stumm/change')}",
-                   dataType:"json",
-                   data: {
-                       'xi_id': xi_id
-                   },
-                   success: function(data){
-                       delete data['state'];
-                       delete data['referer'];
-                       $.each(data,function(name,value){
-                           var depart_name = value.depart_name;
-                           var depart_id = value.depart_id;
-                           $("#depart").append("<option value='"+depart_id+"'>" + depart_name + "</option>");
-                       })
-                   }
-               }).responseText;
-    }
-
-    //三级联动2
-    function change_two(){
-        depart_id = $("#depart").val();
-        $("#class").text(' ');
-        $("#class").append("<option selected disabled value=0>--请选择班级--</option>");
-        $.ajax({
-                   type: "POST",
-                   url:"{:U('Stumm/change_two')}",
-                   dataType:"json",
-                   data: {
-                       'depart_id': depart_id
-                   },
-                   success: function(data){
-                       delete data['state'];
-                       delete data['referer'];
-                       $.each(data,function(name,value){
-                           var class_no = value.class_no;
-                           var class_id = value.class_id;
-                           $("#class").append("<option value='"+class_id+"'>" + class_no + "</option>");
-                       })
-                   }
-               }).responseText;
-    }
-
+    $("select[name=xi_id],[name=depart_id],[name=class_id]").comboSelect();
     $(".update").on("click", function () {
         var span = $(this).find("span").html();
         $.ajax({
