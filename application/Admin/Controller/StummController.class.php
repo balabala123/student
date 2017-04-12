@@ -30,6 +30,10 @@
 
         //查看学生信息
         function index() {
+            if($this->params['page_num']) {
+                $this->pageNum = $this->params['page_num'];
+            }
+            $this->assign('page_num',$this->pageNum);
             $xi_data = $this->ximdl->select();
             $this->assign('xi',$xi_data);
             //搜索start

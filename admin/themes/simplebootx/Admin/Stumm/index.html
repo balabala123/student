@@ -126,11 +126,18 @@
             </tfoot>
         </table>
         <div class="pagination">{$page}</div>
-
+        每页条数：<select style="width: 100px" id="page_num">
+            <option <if condition="$page_num eq 10">selected</if>>10</option>
+            <option <if condition="$page_num eq 50">selected</if>>50</option>
+            <option <if condition="$page_num eq 100">selected</if>>100</option>
+            <option <if condition="$page_num eq 150">selected</if>>150</option>
+            <option <if condition="$page_num eq 200">selected</if>>200</option>
+            <option <if condition="$page_num eq 300">selected</if>>300</option>
+            <option <if condition="$page_num eq 400">selected</if>>400</option>
+            <option <if condition="$page_num eq 500">selected</if>>500</option>
+        </select>
+        <a class="btn btn-primary btn-small" id="reconciliation_send" href="javascript:;" data-url="{:U('index')}">确定</a>
         <div class="table-actions">
-            <button class="btn btn-danger btn-small js-ajax-submit" type="submit" data-action="{:U('Stumm/delete')}"
-                    data-subcheck="true" data-msg="{:L('DELETE_CONFIRM_MESSAGE')}">{:L('DELETE')}
-            </button>
         </div>
     </form>
 </div>
@@ -278,5 +285,13 @@
                    }
                });
     }
+
+    $("#reconciliation_send").on("click", function () {
+        var url = $(this).attr("data-url");
+        var page_num = $("#page_num");
+        if(page_num.val()) url += "&page_num=" + page_num.val();
+        console.log(url);
+         window.location.href = url;
+    });
 </script>
 </html>
