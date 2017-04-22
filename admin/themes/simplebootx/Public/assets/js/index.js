@@ -4,27 +4,27 @@ var tabwidth=118;
 $loading=null;
 $nav_wraper=$("#nav_wraper");
 $(function () {
-	$mainiframe=$("#mainiframe");
-	$content=$("#content");
-	$loading=$("#loading");
-	var headerheight=86;
-	$content.height($(window).height()-headerheight);
-	
-	
-	$nav_wraper.height($(window).height()-45);
-	$nav_wraper.css("overflow","auto");
-	//$nav_wraper.niceScroll();
-	$(window).resize(function(){
-		$nav_wraper.height($(window).height()-45);
-		$content.height($(window).height()-headerheight);
-		 calcTaskitemsWidth();
-	});
-	$("#content iframe").load(function(){
-    	$loading.hide();
+    $mainiframe=$("#mainiframe");
+    $content=$("#content");
+    $loading=$("#loading");
+    var headerheight=86;
+    $content.height($(window).height()-headerheight);
+
+
+    $nav_wraper.height($(window).height()-45);
+    $nav_wraper.css("overflow","auto");
+    //$nav_wraper.niceScroll();
+    $(window).resize(function(){
+        $nav_wraper.height($(window).height()-45);
+        $content.height($(window).height()-headerheight);
+        calcTaskitemsWidth();
     });
-	
+    $("#content iframe").load(function(){
+        $loading.hide();
+    });
+
     $task_content_inner = $("#task-content-inner");
-   
+
 
     $("#searchMenuKeyWord").keyup(function () {
         var wd = $(this).val();
@@ -32,13 +32,13 @@ $(function () {
         var $tmp = $("<div></div>");
         if (wd != "") {
             $("#allmenus a:contains('" + wd + "')").each(
-        function () {
-            $clone = $(this).clone().prepend('<img src="/images/left/01/note.png">');
+                function () {
+                    $clone = $(this).clone().prepend('<img src="/images/left/01/note.png">');
 
-            $clone.wrapAll('<div class="menuitemsbig"></div>').parent().attr("onclick", $clone.attr("onclick")).appendTo($tmp);
+                    $clone.wrapAll('<div class="menuitemsbig"></div>').parent().attr("onclick", $clone.attr("onclick")).appendTo($tmp);
 
-        }
-        );
+                }
+            );
             $("#searchedmenus").html($tmp.html());
             $("#searchedmenus").show();
             $("#allmenus").hide();
@@ -51,14 +51,14 @@ $(function () {
 
     });
 
-    
+
 
     $("#appbox  li .delete").click(function (e) {
         $(this).parent().remove();
         return false;
     });
 
-   
+
 
     ///
 
@@ -89,21 +89,21 @@ $(function () {
         showTopWindow($app);
     });
 
-    $("#task-content-inner li").on("click", function () {
-    	openapp($(this).attr("app-url"), $(this).attr("app-id"), $(this).attr("app-name"));
-    	return false;
-    });
-    
-    $("#task-content-inner li").on("dblclick", function () {
-    	closeapp($(this));
-    	return false;
-    	
-    });
-    $("#task-content-inner a.macro-component-tabclose").on("click", function () {
-    	closeapp($(this).parent());
+    $("#task-content-inner").on("click","li", function () {
+        openapp($(this).attr("app-url"), $(this).attr("app-id"), $(this).attr("app-name"));
         return false;
     });
-    
+
+    // $("#task-content-inner").on("dblclick","li", function () {
+    // 	closeapp($(this));
+    // 	return false;
+
+    // });
+    $("#task-content-inner").on("click","a.macro-component-tabclose", function () {
+        closeapp($(this).parent());
+        return false;
+    });
+
     $("#task-next").click(function () {
         var marginleft = $task_content_inner.css("margin-left");
         marginleft = marginleft.replace("px", "");
@@ -123,13 +123,13 @@ $(function () {
         $task_content_inner.stop();
         $task_content_inner.animate({ "margin-left": marginleft + "px" }, 300, 'swing');
     });
-    
+
     $("#refresh_wrapper").click(function(){
-    	var $current_iframe=$("#content iframe:visible");
-    	$loading.show();
-    	//$current_iframe.attr("src",$current_iframe.attr("src"));
-    	$current_iframe[0].contentWindow.location.reload();
-    	return false;
+        var $current_iframe=$("#content iframe:visible");
+        $loading.show();
+        //$current_iframe.attr("src",$current_iframe.attr("src"));
+        $current_iframe[0].contentWindow.location.reload();
+        return false;
     });
 
     calcTaskitemsWidth();
@@ -147,18 +147,18 @@ function calcTaskitemsWidth() {
 }
 
 function close_current_app(){
-	closeapp($("#task-content-inner .current"));
+    closeapp($("#task-content-inner .current"));
 }
 
 function closeapp($this){
-	if(!$this.is(".noclose")){
-		$this.prev().click();
-    	$this.remove();
-    	$("#appiframe-"+$this.attr("app-id")).remove();
-    	calcTaskitemsWidth();
-    	$("#task-next").click();
-	}
-	 
+    if(!$this.is(".noclose")){
+        $this.prev().click();
+        $this.remove();
+        $("#appiframe-"+$this.attr("app-id")).remove();
+        calcTaskitemsWidth();
+        $("#task-next").click();
+    }
+
 }
 
 
@@ -166,9 +166,9 @@ function closeapp($this){
 
 
 var task_item_tpl ='<li class="macro-component-tabitem">'+
-'<span class="macro-tabs-item-text"></span>'+
-'<a class="macro-component-tabclose" href="javascript:void(0)" title="点击关闭标签"><span></span><b class="macro-component-tabclose-icon">×</b></a>'+
-'</li>';
+    '<span class="macro-tabs-item-text"></span>'+
+    '<a class="macro-component-tabclose" href="javascript:void(0)" title="点击关闭标签"><span></span><b class="macro-component-tabclose-icon">×</b></a>'+
+    '</li>';
 
 var appiframe_tpl='<iframe style="width:100%;height: 100%;" frameborder="0" class="appiframe"></iframe>';
 
@@ -184,65 +184,65 @@ function openapp(url, appid, appname, refresh) {
         $appiframe=$(appiframe_tpl).attr("src",url).attr("id","appiframe-"+appid);
         $appiframe.appendTo("#content");
         $appiframe.load(function(){
-        	$loading.hide();
+            $loading.hide();
         });
         calcTaskitemsWidth();
     } else {
-    	$app.addClass("current");
-    	$(".appiframe").hide();
-    	var $iframe=$("#appiframe-"+appid);
-    	var src=$iframe.get(0).contentWindow.location.href;
-    	src=src.substr(src.indexOf("://")+3);
-    	/*if(src!=GV.HOST+url){
-    		$loading.show();
-    		$iframe.attr("src",url);
-    		$appiframe.load(function(){
-            	$loading.hide();
+        $app.addClass("current");
+        $(".appiframe").hide();
+        var $iframe=$("#appiframe-"+appid);
+        var src=$iframe.get(0).contentWindow.location.href;
+        src=src.substr(src.indexOf("://")+3);
+        /*if(src!=GV.HOST+url){
+         $loading.show();
+         $iframe.attr("src",url);
+         $appiframe.load(function(){
+         $loading.hide();
+         });
+         }*/
+        if(refresh===true){//刷新
+            $loading.show();
+            $iframe.attr("src",url);
+            $iframe.load(function(){
+                $loading.hide();
             });
-    	}*/
-    	if(refresh===true){//刷新
-    		$loading.show();
-    		$iframe.attr("src",url);
-    		$iframe.load(function(){
-            	$loading.hide();
-            });
-    	}
-    	$iframe.show();
-    	//$mainiframe.attr("src",url);
+        }
+        $iframe.show();
+        //$mainiframe.attr("src",url);
     }
-    
+
     //
     var itemoffset= $("#task-content-inner li[app-id='"+appid+"']").index()* tabwidth;
     var width = $("#task-content-inner li").length * tabwidth;
-   
+
     var content_width = $("#task-content").width();
     var offset=itemoffset+tabwidth-content_width;
-    
+
     var lesswidth = content_width - width;
-    
+
     var marginleft = $task_content_inner.css("margin-left");
-   
+
     marginleft =parseInt( marginleft.replace("px", "") );
     var copymarginleft=marginleft;
     if(offset>0){
-    	marginleft=marginleft>-offset?-offset:marginleft;
+        marginleft=marginleft>-offset?-offset:marginleft;
     }else{
-    	marginleft=itemoffset+marginleft>=0?marginleft:-itemoffset;
+        marginleft=itemoffset+marginleft>=0?marginleft:-itemoffset;
     }
-    
+
     if(-itemoffset==marginleft){
-    	marginleft = marginleft + tabwidth > 0 ? 0 : marginleft + tabwidth;
+        marginleft = marginleft + tabwidth > 0 ? 0 : marginleft + tabwidth;
     }
-    
+
     //alert("cddd:"+(content_width-copymarginleft)+" dddd:"+(-itemoffset));
     if(content_width-copymarginleft-tabwidth==itemoffset){
-    	marginleft = marginleft - tabwidth <= lesswidth ? lesswidth : marginleft - tabwidth;
+        marginleft = marginleft - tabwidth <= lesswidth ? lesswidth : marginleft - tabwidth;
     }
-    
-	$task_content_inner.animate({ "margin-left": marginleft + "px" }, 300, 'swing');
-    
-    
-    
-  
+
+    $task_content_inner.animate({ "margin-left": marginleft + "px" }, 300, 'swing');
+
+
+
+
 }
 
