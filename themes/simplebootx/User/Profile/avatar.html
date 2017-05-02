@@ -22,7 +22,7 @@
 	<tc_include file="Public:nav" />
 
 		<div class="container tc-main">
-                <div class="row">
+                <div class="row" style="margin-left:-100px;margin-top: 20px; ">
                     <div class="span3">
 						<if condition="$role eq 1">
 							<tc_include file="Public:usernav"/>
@@ -42,7 +42,7 @@
                                    		<if condition="empty($avatar)">
 							            	<img src="__TMPL__Public/assets/images/headicon_128.png" class="headicon"/>
 							            <else/>
-							            	<img src="{:sp_get_user_avatar_url($avatar)}?t={:time()}" class="headicon"/>
+							            	<img src="{:sp_get_user_avatar_url($avatar)}?t={:time()}" style="width: 200px;height:200px;" class="headicon"/>
 							            </if>
                                    		<input type="file" onchange="avatar_upload(this)" id="avatar_uploder"  name="file"/>
                                    		<div class="uploaded_avatar_area">

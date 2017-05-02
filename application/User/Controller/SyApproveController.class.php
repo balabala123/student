@@ -58,7 +58,7 @@ class SyApproveController extends MemberbaseController {
             ->join('cmf_student on cmf_student.stu_id = cmf_help.stu_id')
             ->join('cmf_xi on cmf_xi.xi_id = cmf_student.xi_id')
             ->join('cmf_depart on cmf_depart.depart_id = cmf_student.depart_id')
-            ->limit($page->firstRow , $page->listRows)
+            ->limit(($current_page-1)*6,6)
             ->where($where)
             ->select();
 //        print_r($this->model->getLastsql());die;

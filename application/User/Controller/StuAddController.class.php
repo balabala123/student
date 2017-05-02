@@ -34,9 +34,19 @@ class StuAddController extends MemberbaseController {
 //        $this->assign("page", $page->show('Admin'));
 
 
+        //分页
+        $page = I('post.');
+        $count=$this->model->where($where)->count();
+        $total_page = ceil($count/6);
+        if(!empty($page)){
+            $current_page = I('post.page');
+        }else{
+            $current_page = 1;
+        }
+
         $Add_point_msg = M('Add_point_msg');
 
-        $res = $this->model->where($where)->select();
+        $res = $this->model->limit(($current_page-1)*6,6)->where($where)->select();
         foreach($res as $k=>$v){
             $data[$k]['id'] = $v['id'];
             $data[$k]['type_name'] = $v['type_name'];
@@ -85,7 +95,8 @@ class StuAddController extends MemberbaseController {
                 break;
         }
 //        $this->assign($this->user);
-
+        $this->assign("current_page",$current_page);
+        $this->assign("total_num",$total_page);
         $this -> display();
     }
 

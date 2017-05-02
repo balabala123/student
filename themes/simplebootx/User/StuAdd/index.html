@@ -12,7 +12,7 @@
 <tc_include file="Public:nav" />
 
 <div class="container tc-main">
-    <div class="row">
+    <div class="row" style="margin-left:-100px;margin-top: 20px; ">
         <div class="span3">
             <if condition="$role eq 1">
                 <tc_include file="Public:usernav"/>
@@ -117,20 +117,20 @@
                                 <tr>
                                     <td class="thtd">成果</td>
                                     <td>
-                                        <textarea  name="add_res" style="height:200px;width:500px;"></textarea>
+                                        <textarea  name="add_res" style="height:80px;width:500px;"></textarea>
                                         <span class="form-required">*</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="thtd">备注</td>
                                     <td>
-                                        <textarea  name="add_note" style="height:200px;width:500px;"></textarea>
+                                        <textarea  name="add_note" style="height:30px;width:500px;"></textarea>
                                         <span class="form-required">*</span>
                                     </td>
                                 </tr>
 
                             </table>
-                            <div class="form-actions">
+                            <div class="form-actions" >
                                 <button type="submit" class="btn btn-primary js-ajax-submit delt">提交</button>
                                 <a class="btn" href="{:U('StuAdd/index')}">返回</a>
                             </div>
