@@ -34,6 +34,7 @@
                     <div style="width:150px; height:150px;">
                        <!-- <img src="{$v['image_src']}" draggable="true" width="100px" height="100px">-->
                         <img src="{:sp_get_image_url($v['image_src'],'?imageView2/1/w/150/h/100')}" style="width: 150px;height: 100px"/>
+                        <span style="margin-left: 40px">{$v.image_name}</span>
                     </div>
                     <a href="{:U('Lunbotu/delete',array('image_id'=>$v['image_id']))}" class="operation" name="del">删除</a>
             </foreach>
@@ -45,6 +46,7 @@
                 <div class="add">
                     <a class="adds">添加图片</a>
                     <a class="dels" style="display: none">取消添加</a><br>
+                    图片名称：<input type="text" name="name[]"><br>
                     <input type="file" name="image[]" required>
                 </div>
             </div>

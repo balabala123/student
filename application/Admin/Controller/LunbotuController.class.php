@@ -47,8 +47,10 @@
                 if (!$info) {// 上传错误提示错误信息
                     $this->error($upload->getError());
                 } else {// 上传成功 获取上传文件信息
-                    foreach($info as $v) {
-                        $this->model->add(array('image_src'=>'/student/public/upload/'.$v['savename']));
+                    foreach($info as $k=>$v) {
+                        $arr = array('image_src'  => '/student/public/upload/' . $v['savename'],
+                                     'image_name' => $this->params['name'][$k]);
+                        $this->model->add($arr);
                     }
                     $this->success('上传成功！');
                 }
