@@ -9,7 +9,7 @@
        </a>
        <!--<a class="brand" href="__ROOT__/"><span style="color: white;font-size: 30px">学生成绩管理系统</span></a>-->
        <div class="nav-collapse collapse" id="main-menu">
-       	<?php
+      <!-- 	<?php
 			$effected_id="main-menu";
 		  	$filetpl="<a href='\$href' target='\$target' style='color: #a7dff1'><b>\$label</b></a>";
 		  	$foldertpl="<a href='\$href' target='\$target' class='dropdown-toggle' data-toggle='dropdown' style='color: #a7dff1;'><b>\$label </b><b class='caret'></b></a>";
@@ -19,7 +19,7 @@
 		  	$showlevel=6;
 		  	$dropdown='dropdown';
 		  	echo sp_get_menu("main",$effected_id,$filetpl,$foldertpl,$ul_class,$li_class,$style,$showlevel,$dropdown);
-		?>
+		?>-->
 		<ul class="nav pull-right" id="main-menu-user">
 			<!-- <li class="user login" style="margin-left: 5px;">
 	            <a class="dropdown-toggle user notifactions" href="{:U('user/notification/index')}">
@@ -33,6 +33,8 @@
 	            <span class="user-nicename" style="color: white"></span><b class="caret"></b></a>
 	            <ul class="dropdown-menu pull-right">
 	               <li><a href="{:U('user/center/index')}"><i class="fa fa-user"></i> &nbsp;个人中心</a></li>
+                   <li class="divider"></li>
+	               <li><a href="__ROOT__/"><i class="fa fa-user"></i> &nbsp;首页</a></li>
 	               <li class="divider"></li>
 	               <li><a href="{:U('user/index/logout')}"><i class="fa fa-sign-out"></i> &nbsp;退出</a></li>
 	            </ul>
