@@ -114,7 +114,7 @@
                 }
                 if (!array_key_exists('false', $bool)) {
 //                    $this->grademdl->commit();
-                    $this->success('修改成功', U('TeaGrade/index'));
+                    $this->success('修改成功');
                 } else {
                     $this->error('修改失败');
 //                    $this->grademdl->rollback();
