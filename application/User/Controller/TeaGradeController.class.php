@@ -103,7 +103,7 @@
                 foreach ($data as $k => $v) {
                     $data[$k]['subject_id'] = $subject['subject_id'];
                 }
-                $this->grademdl->startTrans();
+//                $this->grademdl->startTrans();
                 foreach($data as $k=>$v) {
                     if(!$v['grade_id']) {
                         $this->grademdl->data($v)->add();
@@ -113,11 +113,11 @@
                     $bool[] = $this->grademdl->save($v);
                 }
                 if (!array_key_exists('false', $bool)) {
-                    $this->grademdl->commit();
-                    $this->success('修改成功');
+//                    $this->grademdl->commit();
+                    $this->success('修改成功', U('TeaGrade/index'));
                 } else {
                     $this->error('修改失败');
-                    $this->grademdl->rollback();
+//                    $this->grademdl->rollback();
                 }
             }
         }

@@ -18,7 +18,7 @@
 <tc_include file="Public:nav" />
 
 <div class="container tc-main">
-    <div class="row">
+    <div class="row" style="margin-left:-100px;margin-top: 20px; ">
         <div class="span3">
                 <tc_include file="Public:teanav"/>
         </div>
@@ -31,7 +31,7 @@
                     </volist>
                 </ul>
                 <div class="tab-content">
-                    <form  method="post" action="{:U('TeaGrade/grade')}">
+                    <form  method="post" action="{:U('TeaGrade/grade')}" class="js-ajax-form">
                         <button type="submit" class="btn js-ajax-submit">提交</button>
                     <table class="table table-hover table-bordered table-list" style="width:120%;background-color: rgba(255,255,255,0.6)">
                         <thead>
@@ -59,7 +59,7 @@
                         </foreach>
                         </tbody>
                     </table>
-                    <button type="submit" class="btn js-ajax-submit">提交</button>
+                        <button type="submit" class="btn btn-primary js-ajax-submit">提交</button>
                     </form>
                 </div>
             </div>
