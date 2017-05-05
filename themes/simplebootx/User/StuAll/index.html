@@ -35,7 +35,7 @@
                     </tr>
                     <tr>
                         <td>{$stu_name}</td>
-                        <td>{$score}</td>
+                        <td><if condition="$score">{$score}<else/><font color="red">您的班级同学还未参与此次互评</font></if></td>
                         <td style="font-size: 20px;font-weight: bold;">{$lv}</td>
                     </tr>
                 </table>

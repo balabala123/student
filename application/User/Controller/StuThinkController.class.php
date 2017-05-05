@@ -24,7 +24,7 @@ class StuThinkController extends MemberbaseController {
         $sel = $this->model->where(array('from_stu_id'=>$stu_id))->find();
 
         if($sel){
-            $this->error('您已经提交过评价!',U('Center/index'));
+            $this->assign('status',1);
         }
         $Student = M('Student');
         $class_res = $Student->field('class_id')->where(array('stu_id'=>$stu_id))->find();
