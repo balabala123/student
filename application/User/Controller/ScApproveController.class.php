@@ -48,7 +48,7 @@ class ScApproveController extends MemberbaseController {
         $page = I('post.');
         $count=$this->model->where($where)->count();
         $total_page = ceil($count/6);
-        if(!empty($page)){
+        if(!empty($page) && I('post.page')){
             $current_page = I('post.page');
         }else{
             $current_page = 1;

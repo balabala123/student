@@ -63,7 +63,7 @@
                                 <td style="text-align: center;">{$vo.stu_name}</td>
                                 <td style="text-align: center;">{$vo.stu_no}</td>
                                 <td style="text-align: center;">{$vo.type_name}</td>
-                                <td style="text-align: center;"><a href="{:U('ApApprove/check',array('id'=>$vo['id']))}" target="_blank">查看</a></td>
+                                <td style="text-align: center;"><a href="javascript:;" data-url="{:U('ApApprove/check',array('id'=>$vo['id']))}" class="view">查看</a></td>
                                 <td style="text-align: center;">
                                     <a href="{:U('ApApprove/pass',array('id'=>$vo['id']))}" class="passbtn">通过</a>|
                                     <a href="{:U('ApApprove/rebut',array('id'=>$vo['id']))}" class="rebutbtn">驳回</a>
@@ -226,7 +226,39 @@
 
         });
     }
+    $(".view").on("click", function () {
+        var url = $(this).attr("data-url");
+        Wind.use('artDialog', 'iframeTools', function () {
+            art.dialog.open(url, {
+                title: '详细信息',
+                lock: true,
+                width: 500,
+                height: 300,
+                // 在open()方法中，init会等待iframe加载完毕后执行
+                init: function () {
+                    var iframe = this.iframe.contentWindow;
+                    var top = art.dialog.top;// 引用顶层页面window对象
+                },
+                ok: function () {
+                    var iframe = this.iframe.contentWindow;
+                    if (!iframe.document.body) {
+                        art.dialog.tips('Loading......', 1.5);
+                        return false;
+                    }
 
+                    // 获取iframe嵌套内容
+//                    var remark = iframe.document.getElementById('systemUtilRemark').value;
+//                    if(remark == "--请选择原因--") {
+//                        art.dialog.tips('{:L("SELECT_FAIL_REASON")}', 1.5);
+//                        return false;
+//                    }
+//                    form.append('<input name="fail_reason" type="hidden" value="' + remark + '">');
+//                    saveArchiveData(post_url);
+                },
+                cancel: true
+            });
+        });// end use
+    });
 </script>
 </body>
 </html>

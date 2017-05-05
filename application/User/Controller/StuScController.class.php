@@ -29,21 +29,21 @@ class StuScController extends MemberbaseController {
         }
 
         //分页
-//        $page = I('post.');
-//
-//        $count=$this->model->where($where)->count();
-//        $total_page = floor($count/8)+1;
-//        if(!empty($page)){
-//            $current_page = I('post.page');
-//        }else{
-//            $current_page = 1;
-//        }
-//        $this->assign('total_page',$total_page);
-//        $this->assign('current_page',$current_page);
+        $page = I('post.');
+
+        $count=$this->model->where($where)->count();
+        $total_page = floor($count/6)+1;
+        if(!empty($page) && I('post.page')){
+            $current_page = I('post.page');
+        }else{
+            $current_page = 1;
+        }
+        $this->assign('total_page',$total_page);
+        $this->assign('current_page',$current_page);
 
         $Reward_msg = M('Reward_msg');
 
-        $res = $this->model->where($where)->select();
+        $res = $this->model->where($where) ->limit(($current_page-1)*6,6)->select();
         foreach($res as $k=>$v){
             $data[$k]['id'] = $v['id'];
             $data[$k]['type_name'] = $v['type_name'];
@@ -180,10 +180,9 @@ class StuScController extends MemberbaseController {
 
     public function add_post(){
         $data = I('post.');
+        $data['type_name'] != '请选择'?:$this->error('请选择奖学金类型');
         $Student = M("Student");
         $Reward_msg = M("Reward_msg");
-
-
         $stu_id = $this->id;
         $data['create_time'] = time();
         $data['stu_id'] = $stu_id;

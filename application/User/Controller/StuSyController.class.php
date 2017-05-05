@@ -29,13 +29,21 @@ class StuSyController extends MemberbaseController {
         }
 
         //分页
-//        $count=$this->model->where($where)->count();
-//        $page = $this->page($count, 8);
-//        $this->assign("page", $page->show('Admin'));
+        $page = I('post.');
+
+        $count=$this->model->where($where)->count();
+        $total_page = floor($count/2)+1;
+        if(!empty($page) && I('post.page')){
+            $current_page = I('post.page');
+        }else{
+            $current_page = 1;
+        }
+        $this->assign('total_page',$total_page);
+        $this->assign('current_page',$current_page);
 
         $Help_msg = M('Help_msg');
 
-        $res = $this->model->where($where)->select();
+        $res = $this->model->where($where)->limit(($current_page-1)*2,2)->select();
         foreach($res as $k=>$v){
             $data[$k]['id'] = $v['id'];
             $data[$k]['type_name'] = $v['type_name'];
@@ -157,6 +165,7 @@ class StuSyController extends MemberbaseController {
 
     public function add_post(){
         $data = I('post.');
+        $data['type_name'] != '请选择'?:$this->error('请选择助学金类型');
         $Student = M("Student");
         $Help_msg = M("Help_msg");
 

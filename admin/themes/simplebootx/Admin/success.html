@@ -1,20 +1,20 @@
 <admintpl file="header" />
 <style>
-li {
-	list-style: none;
+span {
+	font-size: 50px;
+	font-weight: bold;
+	font-family: 黑体;
 }
 </style>
 </head>
 <body>
+
 	<div class="wrap">
-		<div id="error_tips">
-			<h2>{$msgTitle}</h2>
+		<div id="error_tips" style="margin-left: 350px">
 			<div class="error_cont">
-				<ul>
-					<li>{$message}</li>
-				</ul>
+				<span>^_^ {$message}</span>
 				<div class="error_return">
-					<a href="{$jumpUrl}" class="btn">返回</a>
+					<a href="{$jumpUrl}" class="btn" style="margin-top: 30px;background-color: #00a0e9">返回</a>
 				</div>
 			</div>
 		</div>

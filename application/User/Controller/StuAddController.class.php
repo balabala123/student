@@ -26,19 +26,14 @@ class StuAddController extends MemberbaseController {
         $type_name = trim(I('request.type_name'));
         if($type_name || ($type_name == 0 && $type_name != '')){
             $where['type_name'] = array('like',"%$type_name%");
+            $this->assign('type_name',I('request.type_name'));
         }
-
-        //分页
-//        $count=$this->model->where($where)->count();
-//        $page = $this->page($count, 8);
-//        $this->assign("page", $page->show('Admin'));
-
 
         //分页
         $page = I('post.');
         $count=$this->model->where($where)->count();
-        $total_page = ceil($count/6);
-        if(!empty($page)){
+        $total_page = ceil($count/2);
+        if(!empty($page) && I('post.page')){
             $current_page = I('post.page');
         }else{
             $current_page = 1;
@@ -46,7 +41,7 @@ class StuAddController extends MemberbaseController {
 
         $Add_point_msg = M('Add_point_msg');
 
-        $res = $this->model->limit(($current_page-1)*6,6)->where($where)->select();
+        $res = $this->model->limit(($current_page-1)*2,2)->where($where)->select();
         foreach($res as $k=>$v){
             $data[$k]['id'] = $v['id'];
             $data[$k]['type_name'] = $v['type_name'];
@@ -96,7 +91,7 @@ class StuAddController extends MemberbaseController {
         }
 //        $this->assign($this->user);
         $this->assign("current_page",$current_page);
-        $this->assign("total_num",$total_page);
+        $this->assign("total_page",$total_page);
         $this -> display();
     }
 
